@@ -1,0 +1,317 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Matt's Vim Configuration File
+"     ':help <command>' for help
+"     ':set all?' to see currently set configuration settings
+"     ':source $MYVIMRC' to update configuration changes
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+ 
+" Plugins {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"source $HOME/.vim/vimrc_plugins  " comment this line to disable plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Basic Settings {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- General
+set backspace=indent,eol,start  " backspacing over everything in insert mode
+set nobackup                    " no backup files
+set colorcolumn=80,100          " highlight columns
+set hidden                      " change buffers without saving
+set lazyredraw                  " wait to draw result of repeated macros
+set linebreak                   " linewrap full words
+set history=1000                " keep # lines of command line history
+set hlsearch                    " highlight matches
+set incsearch                   " highlight search while typing
+set matchpairs+=<:>             " match < > with %
+set mouse=n                     " enable use of mouse in normal mode
+set number                      " line numbers; use with relativenumber
+set relativenumber              " relative line numbers
+set showcmd                     " display commands as they are typed
+set spelllang=en_us             " US dictionary for spell check
+set nostartofline               " stay in column when C-d, C-u, C-b, C-f
+set noswapfile                  " no swap files
+set viminfo-=<50,s10            " save large yanks after close
+set nowritebackup               " no backup before writing file
+ 
+"- Command prompt tab completion
+set wildignore=*.o,*~,*.pyc,*.dep,*.png,*.jpg,*.gif,*.swp
+set wildmode=longest,list  " complete common match then show available
+ 
+"- Searching
+set ignorecase  " use with smartcase
+set smartcase   " foo matches Foo and FOO; Foo matches Foo
+ 
+"- Status line
+set laststatus=2  " always show status line in last window
+set statusline=[%n]\ %f\ %h%w%m%r\ %=%y\ %(%l,%c\ %=\ %P%)
+
+"- Syntax highlighting
+syntax enable
+ 
+"- Tab with spaces
+set autoindent     " copy indent from current line to new line
+set expandtab      " spaces instead of literal tab
+set tabstop=4      " number of spaces in a tab
+set shiftround     " round to tab indent level with '<' and '>'
+set shiftwidth=4   " number of spaces to use in each (auto)indent
+set smarttab       " shiftwidth instead of tabstop at linestart
+set softtabstop=4  " backspace through spaced tabs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Basic Keybinds {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Leader key mapping; view all leader keys with ':g/<leader>/'
+"- Unmap default <space> key bind
+nnoremap <space> <nop>
+"- Using 'map <space> <leader>' to also retain default leader of '\'
+map <space> <leader>
+ 
+"- Buffer movement
+nnoremap <C-n> :bn<CR>
+nnoremap <C-p> :bp<CR>
+nnoremap <leader>d :bdelete<CR>
+nnoremap <leader>o :only<CR>
+nnoremap <leader>c :close<CR>
+ 
+"- Rebind arrow keys to resize splits
+nnoremap <left> 1<C-w><
+nnoremap <right> 1<C-w>>
+nnoremap <up> 1<C-w>+
+nnoremap <down> 1<C-w>-
+ 
+"- Make these commands behave intuitively
+nnoremap gg gg0
+nnoremap G G0
+nnoremap Y y$
+nnoremap & :&&<CR>
+
+"- Command line
+"- Expand current path using %%
+cnoremap %% <C-r>=expand('%:p:h')<CR>/
+"- Bash shell command line movements
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
+"- Replace <C-f> for opening command line editor window
+set cedit=<C-e>
+"- Quickly edit macros e.g. '"<register><leader>m'; must match cedit key bind
+nnoremap <leader>m :<c-u><c-r>=
+    \ 'let @'. v:register .' = '. string(getreg(v:register))<CR><C-e>
+ 
+" File explore
+nnoremap <leader>e :Explore<CR>
+ 
+"- Spell check
+"- Toggle spelling
+nnoremap cos :set spell!<CR>:set spell?<CR>
+"- Instantly-correct spelling (or use qs1z=q then @s then @@)
+nnoremap [S 1z=
+nnoremap ]S 1z=
+
+"- Toggle relative line number
+nnoremap <leader>n :setlocal number! relativenumber!<CR>
+ 
+"- Toggle paste
+nnoremap <leader>p :set paste!<CR>:set paste?<CR>
+ 
+"- Select pasted text; overrides useless select-mode bind
+nnoremap gV `[V`]
+
+" Turn off highlighted values with '<leader>l' and 'coh'
+nnoremap <leader>l :nohlsearch<CR><C-l>
+nnoremap coh :nohlsearch<CR><C-l>
+
+"- Utility command for substitution
+nnoremap <leader>; :%s///ge<left><left><left>
+vnoremap <leader>; :s///ge<left><left><left>
+nmap g: <leader>;
+vmap g: <leader>;
+
+"- Utility commands to input spaces
+"- Insert spaces around character
+nnoremap css i <esc>la <esc>h
+nnoremap csh i <esc>l
+nnoremap csl a <esc>h
+"- Insert spaces around line
+nnoremap csk mmO <esc>`m:delmarks m<CR>
+nnoremap csj mmo <esc>`m:delmarks m<CR>
+
+"- Vim RC commands
+nnoremap <leader>v :e $MYVIMRC<CR>
+nnoremap <leader>r :source %<CR>
+nnoremap <leader>R :source $MYVIMRC<CR>
+
+"- Vertical movement - move down in same column based on editor lines
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+ 
+"- Save file as root
+cmap w!! :w !sudo tee > /dev/null %<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Abbreviations {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- :(ic)ab[breviate], i for insert mode, c for command line mode
+ab date>> <C-r>=strftime('%Y-%m-%d')<CR>
+ab time>> <C-r>=strftime('%H:%M')<CR>
+iab TODO>> TODO <C-r>=strftime('%F')<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+ 
+" Appearance {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- To check what preset appearances are using, use ':verbose hi Visual'
+"- Search online for 'xterm 256 colors' to see visual array
+highlight ColorColumn ctermbg=255
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+ 
+" Commands {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! Vrc :edit $MYVIMRC
+command! Inst :source $MYVIMRC | :PluginInstall
+command! Tco :edit ~/.tmux.conf
+command! Bma :edit ~/.bash_matt
+command! Brc :edit ~/.bashrc
+command! Bpr :edit ~/.bash_profile
+command! Bal :edit ~/.bash_aliases
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+ 
+" Terminal Mode {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" For help :h :term
+" Remap <Esc> to change terminal to normal mode
+tnoremap <Esc> <C-W>N
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Advanced {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Turn on folds for vim file-types; specify desired depth
+autocmd FileType vim setlocal foldmethod=marker foldlevel=1
+ 
+"- Search for selected text, forwards or backwards
+"- See https://vim.fandom.com/wiki/Search_for_visually_selected_text
+vnoremap <silent> * :<C-u>
+  \ let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \ gvy/<C-r>=&ic?'\c':'\C'<CR><C-r><C-r>=substitute(
+  \ escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \ gVzv:call setreg('"', old_reg, old_regtype)<CR>
+vno remap <silent> # :<C-u>
+  \ let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \ gvy?<C-r>=&ic?'\c':'\C'<CR><C-r><C-r>=substitute(
+  \ escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \ gVzv:call setreg('"', old_reg, old_regtype)<CR>
+ 
+"- When editing a file, always jump to the last known cursor position
+augroup enterLastPos
+    autocmd!
+    autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \   execute "normal! g`\"zz" |
+        \ endif
+augroup END
+
+"- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
+augroup fileExit
+    autocmd!
+    autocmd BufWritePost *
+    \ execute "mksession! ~/.vim/lastSession.vim"
+augroup END
+ 
+"- Run macro over visual selection (alternative to '<,'>normal @q)
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+ 
+"- Use literal tabs in a make file
+augroup makeFiles
+    autocmd!
+    autocmd FileType make set noexpandtab
+augroup END
+ 
+"- Detect OpenFOAM filetype
+function! SetFoamFileType()
+    for nL in range(1,10)  " loop through the first 10 lines
+        if (getline(nL) =~ 'FoamFile' || getline(nL) =~ 'F ield')
+            setfiletype cpp  " cpp, foam
+            break
+        endif
+    endfor
+endfunction
+augroup FOAMCmds
+    autocmd!
+    autocmd BufRead * call SetFoamFileType()
+augroup End
+ 
+"- Turn on spell check for certain file types
+augroup enableSpellCheck
+    autocmd!
+    autocmd BufRead *.txt,*.tex,*.md,*.rst setlocal spell
+        \ | syntax spell toplevel
+augroup END
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Tips and Tricks {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Using Vim from the Command Line
+"------------------------------------------------------------------------------
+"- -c or +  for executing :commands with | inbetween commands
+"- -s       for executing normal-mode commands
+
+"- Delete all lines with foo in them from command line
+"-     vi -u NONE -N -c "v/foo/d|wq" fooAndBar.txt
+"-     vi -u NONE -N +"v/foo/d|wq" fooAndBar.txt
+"-     vi -u NONE -N -s normalCmdsScript.vim fooAndBar.txt
+
+"- In normalCmdsScript.vim
+"-     :v/foo/d<CR>:wq<CR>
+
+"- In fooAndBar.txt
+"-     This line has a bar and a foo
+"-     This line only has a bar
+"-     This line only has a foo
+
+"- In fooAndBar.txt after modification
+"-     This line only has a bar
+"------------------------------------------------------------------------------
+
+"- In-File Tips
+"------------------------------------------------------------------------------
+"- Substitution:
+"- Use \=str2float(submatch(1)) instead of \1 when using :s with math
+"- Use & in normal model to repeat substitution
+
+"- Using builtin file find:
+"- set path+=.,**
+"- :find name*<tab>
+
+"- Scripting with Python within Vim:
+"- Remove comment tag on the Python command and type :.!python3 - 
+"- Or highlight line(s) then !python3
+"- for i, x in enumerate("ABC"): print("Person %i is %s"%(i,x))
+
+"- List all lines where the word under the cursor appears: [I or [i for first
+ 
+"- Source Vimscript code without sourcing entire file: yank code and :@0
+"------------------------------------------------------------------------------
+ 
+"- Easter eggs
+"------------------------------------------------------------------------------
+"- :Ni!
+"- :h 42
+"- :h UserGettingBored
+"- :h holy-grail
+"- :smile
+"- :h help!
+"------------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
