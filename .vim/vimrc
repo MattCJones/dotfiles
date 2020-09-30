@@ -186,7 +186,9 @@ command! Bal :edit ~/.bash_aliases
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " For help :h :term
 " Remap <Esc> to change terminal to normal mode
-tnoremap <Esc> <C-W>N
+if v:version >= 802
+    tnoremap <Esc> <C-W>N
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
