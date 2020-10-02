@@ -2,12 +2,21 @@
 " Matt's Vim Configuration File
 "   ':help <command>' for help
 "   ':set all?' to see currently set configuration settings
+"   ':set all&' to set default settings
 "   ':source $MYVIMRC' to update configuration changes
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
  
-" Plugins {{{1
+" Preamble Load Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-source $HOME/.vim/vimrc_plugins  " comment this line to disable plugins
+"- Load default $VIMRUNTIME/syntax/syntax.vim
+syntax enable
+"- Load built-in plugins
+silent! packadd cfilter  " 'Cfilter /PAT/' to filter quickfix list
+"- Load custom plugins
+let pluginspath = "~/.vim/vimrc_plugins"
+if filereadable(expand(pluginspath))
+  execute "source " . pluginspath
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
@@ -46,9 +55,6 @@ set smartcase   " foo matches Foo and FOO; Foo matches Foo
 set laststatus=2  " always show status line in last window
 set statusline=[%n]\ %f\ %h%w%m%r\ %=%y\ %(%l,%c\ %=\ %P%)
 
-"- Syntax highlighting
-syntax enable
- 
 "- Tab with spaces
 set autoindent     " copy indent from current line to new line
 set expandtab      " spaces instead of literal tab
@@ -94,6 +100,7 @@ cnoremap %% <C-r>=expand('%:p:h')<CR>/
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <C-a> <Home>
+cnoremap <C-d> <Delete>
 "- Replace <C-f> for opening command line editor window
 set cedit=<C-y>
 "- Quickly edit macros e.g. '"<register><leader>m'; must match cedit key bind
@@ -117,7 +124,9 @@ nnoremap <leader>n :setlocal number! relativenumber!<CR>
  
 "- Toggle paste
 nnoremap <leader>p :set paste!<CR>:set paste?<CR>
- 
+"- Make sure X11 server is enabled for this:
+nnoremap <leader>P :set paste<CR>"+gP:set nopaste<CR>
+
 "- Select pasted text; overrides useless select-mode bind
 nnoremap gV `[V`]
 
@@ -180,16 +189,19 @@ iab TODO>> TODO <C-r>=strftime('%F')<CR>
  
 " Appearance {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- To check what preset appearances are using, use ':verbose hi Visual'
+"- To check set appearances, use ':verbose hi'
 "- Search online for 'xterm 256 colors' to see visual array
 if !exists('g:loaded_plug')  " if plugins are disabled
-  highlight ColorColumn ctermbg=255
+    highlight ColorColumn ctermbg=255
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
  
 " Commands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Full screen help
+command! -nargs=1 -complete=help H help <args> | silent only
+"- Aliases
 command! Vrc :edit $MYVIMRC
 command! Inst :source $MYVIMRC | :PluginInstall
 command! Tco :edit ~/.tmux.conf
@@ -331,8 +343,11 @@ augroup END
 "- In-File Tips
 "------------------------------------------------------------------------------
 "- Substitution:
-"- Use \=str2float(submatch(1)) instead of \1 when using :s with math
+"- Use :cfdo %s/SEARCH/REPLACE/ge to modify all files in the quickfix list
+"-  See also :bufdo, :argdo, and :windo
+"- Use :args ## % to append current file to arglist
 "- Use & in normal model to repeat substitution
+"- Use \=str2float(submatch(1)) instead of \1 when using :s with math
 
 "- Using builtin file find:
 "- set path+=.,**
