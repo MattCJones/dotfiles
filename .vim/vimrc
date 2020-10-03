@@ -5,15 +5,15 @@
 "   ':set all&' to set default settings
 "   ':source $MYVIMRC' to update configuration changes
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
- 
+
 " Preamble Load Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let pluginspath = "~/.vim/vimrc_plugins"
 "- Load default $VIMRUNTIME/syntax/syntax.vim
 syntax enable
 "- Load built-in plugins
 silent! packadd cfilter  " 'Cfilter /PAT/' to filter quickfix list
 "- Load custom plugins
-let pluginspath = "~/.vim/vimrc_plugins"
 if filereadable(expand(pluginspath))
   execute "source " . pluginspath
 endif
@@ -42,15 +42,15 @@ set nostartofline               " stay in column when C-d, C-u, C-b, C-f
 set noswapfile                  " no swap files
 set viminfo-=<50,s10            " save large yanks after close
 set nowritebackup               " no backup before writing file
- 
+
 "- Command prompt completion
 set wildignore=*.o,*~,*.pyc,*.dep,*.png,*.jpg,*.gif,*.swp
 set wildmode=longest,list  " complete common match then show available
- 
+
 "- Searching
 set ignorecase  " use with smartcase
 set smartcase   " foo matches Foo and FOO; Foo matches Foo
- 
+
 "- Status line
 set laststatus=2  " always show status line in last window
 set statusline=[%n]\ %f\ %h%w%m%r\ %=%y\ %(%l,%c\ %=\ %P%)
@@ -73,27 +73,27 @@ set softtabstop=4  " backspace through spaced tabs
 nnoremap <Space> <nop>
 "- Using 'map <Space> <leader>' to also retain default leader of '\'
 map <Space> <leader>
- 
+
 "- Buffer movement
 nnoremap <C-n> :bn<CR>
 nnoremap <C-p> :bp<CR>
 nnoremap <leader>d :bdelete<CR>
 nnoremap <leader>o :only<CR>
 nnoremap <leader>c :close<CR>
- 
+
 "- Rebind arrow keys to resize splits
 nnoremap <Left> 1<C-w><
-nnoremap <right> 1<C-w>>
-nnoremap <up> 1<C-w>+
-nnoremap <down> 1<C-w>-
- 
+nnoremap <Right> 1<C-w>>
+nnoremap <Up> 1<C-w>+
+nnoremap <Down> 1<C-w>-
+
 "- Make these commands behave intuitively
 nnoremap gg gg0
 nnoremap G G0
 nnoremap Y y$
 nnoremap & :&&<CR>
 
-"- Command line
+"- Command line (see vim-husk plugin for more features)
 "- Expand current path using %%
 cnoremap %% <C-r>=expand('%:p:h')<CR>/
 "- Bash shell command line movements
@@ -105,24 +105,23 @@ cnoremap <C-d> <Delete>
 set cedit=<C-y>
 "- Quickly edit macros e.g. '"<register><leader>m'; must match cedit key bind
 nnoremap <leader>m :<C-u><C-r>= 'let @'. v:register .' = '. string(getreg(v:register))<CR><C-e>
- 
+
 " File explore
 nnoremap <leader>e :Explore<CR>
 
 "- Toggle visualization of character returns and tabs
 nnoremap gl :set list!<CR>
- 
-"- Spell check
-"- Toggle spelling
-nnoremap cos :set spell!<CR>:set spell?<CR>
-"- Instantly-correct spelling (or use qs1z=q then @s then @@)
-nnoremap [S 1z=
-nnoremap ]S 1z=
+
+" Turn off highlighted values and refresh display with '<leader>l' and 'yoh'
+nnoremap <leader>l :setlocal signcolumn=auto<CR>:nohlsearch<CR><C-l>
+nnoremap yoh :setlocal signcolumn=auto<CR>::nohlsearch<CR><C-l>
+
+"- Toggle list (display newlines and tabs)
+nnoremap yol :setlocal list!<CR>
 
 "- Toggle relative line number
-nnoremap <leader>n :setlocal number! relativenumber! signcolumn=no<CR>
-nnoremap con :setlocal number! relativenumber! signcolumn=no<CR>
- 
+nnoremap yon :setlocal number! relativenumber! signcolumn=no<CR>
+
 "- Toggle paste
 nnoremap <leader>p :set paste!<CR>:set paste?<CR>
 
@@ -132,9 +131,14 @@ nnoremap <leader>P :set paste<CR>"+gP:set nopaste<CR>
 "- Select pasted text; overrides useless select-mode bind
 nnoremap gV `[V`]
 
-" Turn off highlighted values and refresh display with '<leader>l' and 'coh'
-nnoremap <leader>l :set signcolumn=auto<CR>:nohlsearch<CR><C-l>
-nnoremap coh :set signcolumn=auto<CR>::nohlsearch<CR><C-l>
+"- Toggle spell checking
+nnoremap yos :set spell!<CR>:set spell?<CR>
+"- Instantly-correct spelling (or use qs1z=q then @s then @@)
+nnoremap [S 1z=
+nnoremap ]S 1z=
+
+"- Toggle X-hairs
+nnoremap yox :set cursorline!<CR>:set cursorcolumn!<CR>
 
 "- Utility command for substitution
 nnoremap <leader>; :%s///ge<Left><Left><Left>
@@ -161,7 +165,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap gj j
 nnoremap gk k
- 
+
 "- Save file as root
 cmap w!! :w !sudo tee > /dev/null %<CR>
 
@@ -195,7 +199,7 @@ ab time>> <C-r>=strftime('%H:%M')<CR>
 iab TODO>> TODO <C-r>=strftime('%F')<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
- 
+
 " Appearance {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- To check set appearances, use ':verbose hi'
@@ -205,13 +209,14 @@ if !exists('g:loaded_plug')  " if plugins are disabled
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
- 
+
 " Commands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- Full screen help
 command! -nargs=1 -complete=help H help <args> | silent only
 "- Aliases
 command! Vrc :edit $MYVIMRC
+command! Vrcp :edit ~/.vim/vimrc_plugins
 command! Inst :source $MYVIMRC | :PluginInstall
 command! Tco :edit ~/.tmux.conf
 command! Bma :edit ~/.bash_matt
@@ -220,7 +225,7 @@ command! Bpr :edit ~/.bash_profile
 command! Bal :edit ~/.bash_aliases
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
- 
+
 " Terminal Mode {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " For help :h :term
@@ -235,7 +240,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- Turn on folds for vim file-types; specify desired depth
 autocmd FileType vim setlocal foldmethod=marker foldlevel=1
- 
+
 "- Search for selected text, forwards or backwards
 "- See https://vim.fandom.com/wiki/Search_for_visually_selected_text
 vnoremap <silent> * :<C-u>
@@ -248,7 +253,7 @@ vno remap <silent> # :<C-u>
   \ gvy?<C-r>=&ic?'\c':'\C'<CR><C-r><C-r>=substitute(
   \ escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \ gVzv:call setreg('"', old_reg, old_regtype)<CR>
- 
+
 "- When editing a file, always jump to the last known cursor position
 augroup enterLastPos
   autocmd!
@@ -264,20 +269,20 @@ augroup fileExit
   autocmd BufWritePost *
   \ execute "mksession! ~/.vim/lastSession.vim"
 augroup END
- 
+
 "- Run macro over visual selection (alternative to '<,'>normal @q)
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 function! ExecuteMacroOverVisualRange()
   echo "@".getcmdline()
   execute ":'<,'>normal @".nr2char(getchar())
 endfunction
- 
+
 "- Use literal tabs in a make file
 augroup makeFiles
   autocmd!
   autocmd FileType make set noexpandtab
 augroup END
- 
+
 "- Detect OpenFOAM filetype
 function! SetFoamFileType()
   for nL in range(1,10)  " loop through the first 10 lines
@@ -315,7 +320,7 @@ endfunction
 nnoremap g: :set opfunc=SourceVimscript<cr>g@
 vnoremap g: :<c-U>call SourceVimscript("visual")<cr>
 nnoremap g:: :call SourceVimscript("currentline")<cr>
- 
+
 "- Turn on spell check for certain file types
 augroup enableSpellCheck
   autocmd!
@@ -358,17 +363,13 @@ augroup END
 "- Use & in normal model to repeat substitution
 "- Use \=str2float(submatch(1)) instead of \1 when using :s with math
 
-"- Using builtin file find:
-"- set path+=.,**
-"- :find name*<tab>
-
 "- Scripting with Python within Vim:
-"- Remove comment tag on the Python command and type :.!python3 - 
+"- Remove comment tag on the Python command and type :.!python3
 "- Or highlight line(s) then !python3
 "- for i, x in enumerate("ABC"): print("Person %i is %s"%(i,x))
 
 "- List all lines where the word under the cursor appears: [I or [i for first
- 
+
 "- Source Vimscript code without sourcing entire file: yank code and :@0
 
 "- View current vim environement:
@@ -377,7 +378,7 @@ augroup END
 "-   :redir @r | let g:
 "-   :new | put r | redir END
 "------------------------------------------------------------------------------
- 
+
 "- Easter eggs
 "------------------------------------------------------------------------------
 "- :Ni!
