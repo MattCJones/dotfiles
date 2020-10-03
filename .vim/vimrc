@@ -8,14 +8,14 @@
 
 " Preamble Load Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let pluginspath = "~/.vim/vimrc_plugins"
-"- Load default $VIMRUNTIME/syntax/syntax.vim
-syntax enable
+let userpluginspath = "~/.vim/vimrc_plugins"
+"- Load default Vim configuration
+source $VIMRUNTIME/defaults.vim
 "- Load built-in plugins
 silent! packadd cfilter  " 'Cfilter /PAT/' to filter quickfix list
-"- Load custom plugins
-if filereadable(expand(pluginspath))
-  execute "source " . pluginspath
+"- Load user plugins
+if filereadable(expand(userpluginspath))
+  execute "source " . userpluginspath
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
@@ -23,20 +23,18 @@ endif
 " Basic Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- General
-set backspace=indent,eol,start  " backspacing over everything in insert mode
 set nobackup                    " no backup files
 set colorcolumn=80,100          " highlight columns
 set hidden                      " change buffers without saving
 set lazyredraw                  " wait to draw result of repeated macros
 set linebreak                   " linewrap full words
-set history=1000                " keep # lines of command line history
 set hlsearch                    " highlight matches
 set incsearch                   " highlight search while typing
 set matchpairs+=<:>             " match < > with %
 set mouse=n                     " enable use of mouse in normal mode
 set number                      " line numbers; use with relativenumber
 set relativenumber              " relative line numbers
-set showcmd                     " display commands as they are typed
+set scrolloff=0                 " lines of buffer from top/bottom of display
 set spelllang=en_us             " US dictionary for spell check
 set nostartofline               " stay in column when C-d, C-u, C-b, C-f
 set noswapfile                  " no swap files
@@ -239,7 +237,10 @@ endif
 " Advanced {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- Turn on folds for vim file-types; specify desired depth
-autocmd FileType vim setlocal foldmethod=marker foldlevel=1
+augroup vimFiles
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker foldlevel=1
+augroup END
 
 "- Search for selected text, forwards or backwards
 "- See https://vim.fandom.com/wiki/Search_for_visually_selected_text
@@ -254,15 +255,6 @@ vno remap <silent> # :<C-u>
   \ escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \ gVzv:call setreg('"', old_reg, old_regtype)<CR>
 
-"- When editing a file, always jump to the last known cursor position
-augroup enterLastPos
-  autocmd!
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   execute "normal! g`\"zz" |
-    \ endif
-augroup END
-
 "- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
 augroup fileExit
   autocmd!
@@ -270,7 +262,7 @@ augroup fileExit
   \ execute "mksession! ~/.vim/lastSession.vim"
 augroup END
 
-"- Run macro over visual selection (alternative to '<,'>normal @q)
+"- Run macro over visual selection of lines (alternative to '<,'>normal @q)
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 function! ExecuteMacroOverVisualRange()
   echo "@".getcmdline()
