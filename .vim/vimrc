@@ -15,7 +15,7 @@ let userpluginspath = "~/.vim/vimrc_plugins"
 source $VIMRUNTIME/defaults.vim
 
 "- Load built-in plugins
-packadd! cfilter  " 'Cfilter /PAT/' to filter quickfix list
+silent! packadd! cfilter  " 'Cfilter /PAT/' to filter quickfix list
 
 "- Load user plugins
 if filereadable(expand(userpluginspath))
@@ -31,6 +31,7 @@ set nobackup                    " no backup files
 set colorcolumn=80,100          " highlight columns
 set formatoptions=cqlnj         " auto-formatting of text - see :help
 set hidden                      " change buffers without saving
+set laststatus=2                " always show status line in last window
 set lazyredraw                  " wait to draw result of repeated macros
 set linebreak                   " linewrap full words
 set hlsearch                    " highlight matches
@@ -55,10 +56,6 @@ set wildcharm=<C-z>  " used in macros to initiate <S-Tab> completion
 set ignorecase  " use with smartcase
 set smartcase   " foo matches Foo and FOO; Foo matches Foo
 
-"- Status line
-set laststatus=2  " always show status line in last window
-set statusline=[%n]%<\ %f\ %h%w%m%r\ %=%y\ %(%l,%c\ %=\ %P%)
-
 "- Tab with spaces
 set autoindent     " copy indent from current line to new line
 set expandtab      " spaces instead of literal tab
@@ -70,7 +67,7 @@ set softtabstop=4  " backspace through spaced tabs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
-" Basic Keybinds {{{1
+" Basic Key Mappings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- Leader key mapping; view all leader keys with ':g/<leader>/'
 "- Unmap default <Space> key bind
@@ -189,63 +186,17 @@ nnoremap <leader>g* :<C-u>cexpr []<CR>:<C-u>noautocmd bufdo
     \ vimgrepadd /\<<C-r><C-w>\>/j %<CR>
 vnoremap <leader>g* :<C-u>cexpr []<CR>:<C-u>noautocmd bufdo
     \ vimgrepadd /\<<C-r><C-w>\>/j %<CR>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
-" Abbreviations {{{1
+" Advanced Key Mappings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- :(ic)ab[breviate], i for insert mode, c for command line mode
-ab date>> <C-r>=strftime('%Y-%m-%d')<CR>
-ab time>> <C-r>=strftime('%H:%M')<CR>
-iab TODO>> TODO <C-r>=strftime('%F')<CR>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" }}}1
-
-" Appearance {{{1
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- To check set appearances, use ':verbose hi'
-"- Search online for 'xterm 256 colors' to see visual array
-if !exists('g:loaded_plug')  " if plugins are disabled
-    highlight ColorColumn ctermbg=255
-endif
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" }}}1
-
-" Commands {{{1
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- Full screen help
-command! -nargs=1 -complete=help H help <args> | silent only
-"- Aliases
-command! Vrc :edit $MYVIMRC
-command! Vrcp :edit ~/.vim/vimrc_plugins
-command! SVrc :source $MYVIMRC
-command! Inst :source $MYVIMRC | :PluginInstall
-command! Tco :edit ~/.tmux.conf
-command! Bma :edit ~/.bash_matt
-command! Brc :edit ~/.bashrc
-command! Bpr :edit ~/.bash_profile
-command! Bal :edit ~/.bash_aliases
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" }}}1
-
-" Terminal Mode {{{1
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" For help :h :term
-" Remap <Esc> to change terminal to normal mode
-if v:version >= 802
-  tnoremap <Esc> <C-W>N
-endif
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" }}}1
-
-" Advanced {{{1
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- Turn on folds for vim file-types; specify desired depth
-augroup vimFiles
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker foldlevel=1
-augroup END
+"- Run macro over visual selection of lines (alternative to '<,'>normal @q)
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
 
 "- Search for selected text, forwards or backwards
 "- See https://vim.fandom.com/wiki/Search_for_visually_selected_text
@@ -259,40 +210,6 @@ vnoremap <silent> # :<C-u>
   \ gvy?<C-r>=&ic?'\c':'\C'<CR><C-r><C-r>=substitute(
   \ escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \ gVzv:call setreg('"', old_reg, old_regtype)<CR>
-
-"- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
-augroup fileExit
-  autocmd!
-  autocmd BufWritePost *
-  \ execute "mksession! ~/.vim/lastSession.vim"
-augroup END
-
-"- Run macro over visual selection of lines (alternative to '<,'>normal @q)
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
-function! ExecuteMacroOverVisualRange()
-  echo "@".getcmdline()
-  execute ":'<,'>normal @".nr2char(getchar())
-endfunction
-
-"- Use literal tabs in a make file
-augroup makeFiles
-  autocmd!
-  autocmd FileType make set noexpandtab
-augroup END
-
-"- Detect OpenFOAM filetype
-function! SetFoamFileType()
-  for nL in range(1,10)  " loop through the first 10 lines
-    if (getline(nL) =~ 'FoamFile' || getline(nL) =~ 'F ield')
-      setfiletype cpp  " cpp, foam
-      break
-    endif
-  endfor
-endfunction
-augroup FOAMCmds
-  autocmd!
-  autocmd BufRead * call SetFoamFileType()
-augroup End
 
 " Source Vimscript without sourcing entire file; or yank and :@<reg>
 function! SourceVimscript(type)
@@ -317,12 +234,128 @@ endfunction
 nnoremap g: :set opfunc=SourceVimscript<cr>g@
 vnoremap g: :<c-U>call SourceVimscript("visual")<cr>
 nnoremap g:: :call SourceVimscript("currentline")<cr>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+
+" Abbreviations {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- :(ic)ab[breviate], i for insert mode, c for command line mode
+ab date>> <C-r>=strftime('%Y-%m-%d')<CR>
+ab time>> <C-r>=strftime('%H:%M')<CR>
+iab TODO>> TODO <C-r>=strftime('%F')<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Appearance {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- To check set appearances, use ':verbose hi'
+"- Search online for 'xterm 256 colors' to see visual array
+if !exists('g:loaded_plug')  " if plugins are disabled
+  highlight ColorColumn ctermbg=255
+endif
+
+"- Function: return string if paste is active
+"- abort -> function will abort soon as error detected
+function! PasteStatus() abort
+  if &paste
+    let l:pastestatus = "[PASTE]"
+  else
+    let l:pastestatus = ""
+  endif
+  return l:pastestatus
+endfunction
+
+"- Build status line
+set statusline=[%n]%<                         " buffer # and truncation marker
+set statusline+=\ %f                          " file path
+set statusline+=\ %h%w%m%r%{PasteStatus()}    " various status flags
+set statusline+=%=                            " separation of LHS and RHS
+set statusline+=\ %y                          " filetype
+set statusline+=%-4(\ %c%)\|%12(\ %l/%L\ %P%) " column and line information
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Commands {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Full screen help
+command! -nargs=1 -complete=help H help <args> | silent only
+"- Aliases
+command! Vrc edit $MYVIMRC
+command! Vrcp edit ~/.vim/vimrc_plugins
+command! SVrc source $MYVIMRC
+command! Inst source $MYVIMRC | :PlugInstall
+command! Tco edit ~/.tmux.conf
+command! Bma edit ~/.bash_matt
+command! Brc edit ~/.bashrc
+command! Bpr edit ~/.bash_profile
+command! Bal edit ~/.bash_aliases
+"- Close all buffers but current
+command! BufOnly silent! execute "%bd|e#|bd#"
+"- Build tags using external ctags program; run from project's base directory
+command! Ctags !ctags -R .
+"- Open new file in full window
+command! New new | only
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Terminal Mode {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" For help :h :term
+" Remap <Esc> to change terminal to normal mode
+if v:version >= 802
+  tnoremap <Esc> <C-W>N
+endif
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Autocommands {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Set scrolloff setting to maximum when viewing help window
+augroup helpWindows
+  autocmd!
+  autocmd FileType help setlocal scrolloff=99
+augroup END
+
+"- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
+augroup fileExit
+  autocmd!
+  autocmd BufWritePost *
+  \ execute "mksession! ~/.vim/lastSession.vim"
+augroup END
+
+"- Use literal tabs in a make file
+augroup makeFiles
+  autocmd!
+  autocmd FileType make set noexpandtab
+augroup END
+
+"- Detect OpenFOAM filetype
+function! SetFoamFileType()
+  for nL in range(1,10)  " loop through the first 10 lines
+    if (getline(nL) =~ 'FoamFile' || getline(nL) =~ 'F ield')
+      setfiletype cpp  " cpp, foam
+      break
+    endif
+  endfor
+endfunction
+augroup FOAMCmds
+  autocmd!
+  autocmd BufRead * call SetFoamFileType()
+augroup End
 
 "- Turn on spell check for certain file types
 augroup enableSpellCheck
   autocmd!
   autocmd BufRead *.tex,*.md,*.rst setlocal spell
     \ | syntax spell toplevel
+augroup END
+
+"- Turn on folds for vim file-types; specify desired depth; disable annoying
+"- format options that are added when loading a Vim filetype
+augroup vimFiles
+  autocmd!
+  autocmd FileType vim setlocal foldmethod=marker foldlevel=1 formatoptions-=ro
 augroup END
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
