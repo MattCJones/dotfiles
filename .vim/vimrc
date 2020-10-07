@@ -29,7 +29,7 @@ endif
 "- General
 set nobackup                    " no backup files
 set colorcolumn=80,100          " highlight columns
-set formatoptions=cqlnj         " auto-formatting of text - see :help
+set formatoptions=qlnj         " auto-formatting of text - see :help
 set hidden                      " change buffers without saving
 set laststatus=2                " always show status line in last window
 set lazyredraw                  " wait to draw result of repeated macros
@@ -119,6 +119,9 @@ nnoremap yol :setlocal list!<CR>
 
 "- Toggle relative line number
 nnoremap yon :setlocal number! relativenumber! signcolumn=no<CR>
+
+"- Toggle scrolloff to maximum so that screen moves with j and k
+nnoremap yoz :let &scrolloff=999-&scrolloff<CR>
 
 "- Toggle paste
 nnoremap <leader>p :set paste!<CR>:set paste?<CR>
@@ -253,6 +256,7 @@ iab TODO>> TODO <C-r>=strftime('%F')<CR>
 "- Search online for 'xterm 256 colors' to see visual array
 if !exists('g:loaded_plug')  " if plugins are disabled
   highlight ColorColumn ctermbg=255
+  highlight LineNr ctermbg=255
 endif
 
 "- Function: return string if paste is active
@@ -311,12 +315,6 @@ endif
 
 " Autocommands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- Set scrolloff setting to maximum when viewing help window
-augroup helpWindows
-  autocmd!
-  autocmd FileType help setlocal scrolloff=99
-augroup END
-
 "- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
 augroup fileExit
   autocmd!
