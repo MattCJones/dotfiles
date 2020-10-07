@@ -1,0 +1,57 @@
+priority -50
+
+snippet pd "partial" w
+\partial ${1:${VISUAL:var}}
+endsnippet
+
+snippet pd2 "O(2) partial" w
+\partial^2 ${1:${VISUAL:var}}
+endsnippet
+
+snippet dfrac "derivative fraction" w
+\frac{d ${1:${VISUAL:num}}}{d ${2:denom}}
+endsnippet
+
+snippet dfrac2 "O(2) derivative fraction" w
+\frac{d^2 ${1:${VISUAL:num}}}{d ${2:denom}^2}
+endsnippet
+
+snippet pfrac "\partial fraction" w
+\frac{\partial ${1:${VISUAL:num}}}{\partial ${2:denom}}
+endsnippet
+
+snippet pfrac2 "\partial fraction" w
+\frac{\partial^2 ${1:${VISUAL:num}}}{\partial ${2:denom}^2}
+endsnippet
+
+snippet { "curly bracket" w
+{${1:${VISUAL:}}}
+endsnippet
+
+snippet [ "square bracket" w
+[${1:${VISUAL:}}]
+endsnippet
+
+snippet ( "parentheses" w
+(${1:${VISUAL:}})
+endsnippet
+
+snippet | "bar" w
+|${1:${VISUAL:}}|
+endsnippet
+
+snippet [a-zA-Z]*_ "subscript" w
+_{${1:${VISUAL:}}}
+endsnippet
+
+snippet ncl "nomenclature" w
+\nomenclature{$${1:${VISUAL:var}}$}{${2:description}}
+endsnippet
+
+snippet curl "curl" w
+\nabla \times ${1:${VISUAL:}}
+endsnippet
+
+snippet div "divergence" w
+\nabla \cdot ${1:${VISUAL:}}
+endsnippet
