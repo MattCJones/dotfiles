@@ -29,7 +29,6 @@ endif
 "- General
 set nobackup                    " no backup files
 set colorcolumn=80,100          " highlight columns
-set formatoptions=qlnj         " auto-formatting of text - see :help
 set hidden                      " change buffers without saving
 set laststatus=2                " always show status line in last window
 set lazyredraw                  " wait to draw result of repeated macros
@@ -120,7 +119,7 @@ nnoremap yol :setlocal list!<CR>
 "- Toggle relative line number
 nnoremap yon :setlocal number! relativenumber! signcolumn=no<CR>
 
-"- Toggle scrolloff to maximum so that screen moves with j and k
+"- Toggle scrolloff to maximum so that screen moves with j and k (like ctrl-z)
 nnoremap yoz :let &scrolloff=999-&scrolloff<CR>
 
 "- Toggle paste
@@ -315,6 +314,13 @@ endif
 
 " Autocommands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- All files
+augroup allFiles
+  autocmd!
+  " Auto-formatting of text, don't auto comment, see :help for specifics
+  autocmd FileType * setlocal formatoptions=qlnj
+augroup END
+
 "- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
 augroup fileExit
   autocmd!
@@ -353,7 +359,7 @@ augroup END
 "- format options that are added when loading a Vim filetype
 augroup vimFiles
   autocmd!
-  autocmd FileType vim setlocal foldmethod=marker foldlevel=1 formatoptions-=ro
+  autocmd FileType vim setlocal foldmethod=marker foldlevel=1
 augroup END
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
