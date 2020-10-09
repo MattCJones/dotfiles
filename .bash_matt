@@ -189,6 +189,22 @@ function showFullPath {
     fi
 }
 
+function sbatchAllInDir {
+    #- Submit jobs in all base level subdirectories of input directory
+    inDir=$1
+    if [ -z "$inDir" ]; then
+        echo "Error! No target directory. Exiting."
+        exit
+    fi
+    echo "Running jobs in $inDir"
+    for dir in $inDir/*/; do  # loop through base level subdirectories
+        runFile="$inDir/run.sh"
+        if [ -f "$runFile" ]; then
+            sbatch $runFile
+        fi
+    done
+}
+
 function tarBallCompress {
     #- Conveniently tarball a directory
     tar -cvzf $1.tgz $1
