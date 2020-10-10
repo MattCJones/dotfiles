@@ -86,6 +86,7 @@ alias lmk="latexmk -pdf -pvc -lualatex"
 #- Git
 alias gs="git status"
 alias gif="git diff"
+alias gifc="git diff --cached"
 alias gad="git add"
 alias grmr="grmr_F"
 #- Other
@@ -239,4 +240,10 @@ if [ -n "$BASH_VERSION" ]; then  # if running bash
 
     #- Disable Ctrl-s stopping terminal
     stty -ixon
+
+    #- Start Tmux if not started
+    if [ -z "$TMUX" ]; then
+    tmux
+    fi
+
 fi
