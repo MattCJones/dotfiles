@@ -88,7 +88,9 @@ alias gs="git status"
 alias gif="git diff"
 alias gifc="git diff --cached"
 alias gad="git add"
-alias grmr="grmr_F"
+alias gca="git commit --amend -C HEAD"
+alias grm="_grm"
+alias grmr="_grmr"
 #- Other
 alias pyProfile="python -m cProfile"
 function vman {
@@ -211,7 +213,13 @@ function tarBallCompress {
     tar -cvzf $1.tgz $1
 }
 
-function grmr_F {
+function _grm {
+    #- Remove and git remove
+    rm $1
+    git rm $1
+}
+
+function _grmr {
     #- Remove and git remove
     rm -r $1
     git rm -r $1
