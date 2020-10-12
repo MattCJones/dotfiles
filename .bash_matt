@@ -73,6 +73,7 @@ alias vir="vim -RmM"  # readonly mode
 alias vrc="vi ~/.vim/vimrc"
 alias vrcp="vi ~/.vim/vimrc_plugins"
 alias vrcm="vi ~/.vim/vimrc_more"
+alias vrco="vi ~/.vim/vimrc_openfoam"
 alias vimProfile="vim --cmd 'profile start vimrc_profile' --cmd 'profile! file ~/.vim/vimrc'"
 alias vimStartupTime="vim --startuptime /tmp/startup.log +q && vim /tmp/startup.log"
 alias vis="vim -u NONE -N -s"

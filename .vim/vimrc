@@ -9,7 +9,8 @@
 
 " Preamble Load Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let userpluginspath = "~/.vim/vimrc_plugins"
+let user_plugins_path = "~/.vim/vimrc_plugins"
+let user_openfoam_path = "~/.vim/vimrc_openfoam"
 
 "- Load default Vim configuration
 source $VIMRUNTIME/defaults.vim
@@ -17,9 +18,14 @@ source $VIMRUNTIME/defaults.vim
 "- Load built-in plugins
 silent! packadd! cfilter  " 'Cfilter /PAT/' to filter quickfix list
 
+"- Load user OpenFOAM settings
+if filereadable(expand(user_plugins_path))
+  execute "source " . user_openfoam_path
+endif
+
 "- Load user plugins
-if filereadable(expand(userpluginspath))
-  execute "source " . userpluginspath
+if filereadable(expand(user_plugins_path))
+  execute "source " . user_plugins_path
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
@@ -29,11 +35,12 @@ endif
 "- General
 set nobackup                    " no backup files
 set colorcolumn=80,100          " highlight columns
+set encoding=utf-8              " only use UTF-8 characters
 set hidden                      " change buffers without saving
+set hlsearch                    " highlight matches
 set laststatus=2                " always show status line in last window
 set lazyredraw                  " wait to draw result of repeated macros
 set linebreak                   " linewrap full words
-set hlsearch                    " highlight matches
 set incsearch                   " highlight search while typing
 set matchpairs+=<:>             " match < > with %
 set mouse=n                     " enable use of mouse in normal mode
@@ -126,7 +133,7 @@ nnoremap yoz :let &scrolloff=999-&scrolloff<CR>
 nnoremap <leader>p :set paste!<CR>:set paste?<CR>
 
 "- Paste from clipboard (make sure X11 server is enabled)
-nnoremap <leader>P :set paste<CR>"+gP:set nopaste<CR>
+nnoremap <leader>P :set paste<CR>:put +<CR>:set nopaste<CR>
 
 "- Select pasted text; overrides useless select-mode bind
 nnoremap gV `[V`]
@@ -286,6 +293,7 @@ command! -nargs=1 -complete=help H help <args> | silent only
 "- Aliases
 command! Vrc edit $MYVIMRC
 command! Vrcp edit ~/.vim/vimrc_plugins
+command! Vrco edit ~/.vim/vimrc_openfoam
 command! SVrc source $MYVIMRC
 command! Inst source $MYVIMRC | :PlugInstall
 command! Tco edit ~/.tmux.conf
@@ -334,21 +342,7 @@ augroup makeFiles
   autocmd FileType make set noexpandtab
 augroup END
 
-"- Detect OpenFOAM filetype
-function! SetFoamFileType()
-  for nL in range(1,10)  " loop through the first 10 lines
-    if (getline(nL) =~ 'FoamFile' || getline(nL) =~ 'F ield')
-      setfiletype cpp  " cpp, foam
-      break
-    endif
-  endfor
-endfunction
-augroup FOAMCmds
-  autocmd!
-  autocmd BufRead * call SetFoamFileType()
-augroup End
-
-"- Turn on spell check for certain file types
+"- Turn on spell check for certain file types; use i_ctrl-s to complete
 augroup enableSpellCheck
   autocmd!
   autocmd BufRead *.tex,*.md,*.rst setlocal spell

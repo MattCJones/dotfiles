@@ -1,0 +1,32 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Matt's Vim OpenFOAM Configuration File
+"
+" Useful Vim settings for working with OpenFOAM
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Commands {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Build ctags using current directory and source files; DEP: exuberant ctags
+command! CtagsOpenFOAM
+    \ !find . $FOAM_SRC $FOAM_APP -type f -not -path "*lnInclude*" | sudo ctags -L -
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Autocommands {{{1
+" -----------------------------------------------------------------------------
+"- Detect OpenFOAM filetype
+function! SetFoamFileType()
+  for nL in range(1,10)  " loop through the first 10 lines
+    if (getline(nL) =~ 'FoamFile' || getline(nL) =~ '\\      /  F ield')
+      setfiletype foam  " cpp, foam
+      break
+    endif
+  endfor
+endfunction
+augroup FOAMCmds
+  autocmd!
+  autocmd BufRead * call SetFoamFileType()
+augroup End
+" -----------------------------------------------------------------------------
+" }}}1
+
