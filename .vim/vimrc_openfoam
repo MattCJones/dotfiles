@@ -7,16 +7,16 @@
 " Commands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- Build ctags using current directory and source files; DEP: Ctags
-command! CtagsOpenFOAM
+command! FoamCtags
     \ !find . $FOAM_SRC $FOAM_APP -name "*.[CH]" -type f 
-    \ -not -path "*lnInclude*" | ctags -L -
+    \ -not -path "*lnInclude*" | ctags --totals --fields=+l -L -
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
 " Autocommands {{{1
 " -----------------------------------------------------------------------------
 "- Detect OpenFOAM filetype
-function! SetFoamFileType()
+function! CheckFoamFileType()
   for nL in range(1,10)  " loop through the first 10 lines
     if (getline(nL) =~ 'FoamFile' || getline(nL) =~ '\\      /  F ield')
       setfiletype cpp  " cpp, foam
@@ -26,7 +26,7 @@ function! SetFoamFileType()
 endfunction
 augroup FOAMCmds
   autocmd!
-  autocmd BufRead * call SetFoamFileType()
+  autocmd BufRead * call CheckFoamFileType()
   autocmd BufRead files,options setfiletype foam_make | set syntax=make
 augroup End
 " -----------------------------------------------------------------------------

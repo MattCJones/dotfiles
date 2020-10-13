@@ -1,14 +1,13 @@
 ###############################
 # Constants
 ###############################
-export WHOME="/mnt/c/Users/mcjones"
 export USER="$(whoami)"
+export WHOME="/mnt/c/Users/$USER"
 
 ###############################
 # Aliases
 ###############################
 #- Bash utilities
-alias ~~="cd $WHOME"
 alias myip="ifconfig 2>/dev/null | grep 'inet .*\([0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9]*\)' | xargs | cut -d ' ' -f2"
 alias me="echo '$(id -un)@$(hostname) $(myip)';"
 alias ld="ls -d */"
@@ -18,7 +17,6 @@ alias la="ls -A"
 alias l="ls -CF"
 alias lsp="showFullPath"  # show pull path
 alias lsd="ls -d */"  # show only directories
-alias cl="cdThenLs"  # change directory and run ls command
 alias agrep="alias | grep"
 alias sgrep="set | grep"
 alias md="mkdir"
@@ -29,14 +27,14 @@ alias rmrf="rm -rf"
 alias rml="removeSymLinksInDir "  # remove symbolic links in a directory
 alias s="ls"
 alias sl="ls"
-alias sd="saveDir "  # save a directory to a var; call that var to cd
 alias lns="ln -s"
 alias Grep="_Grep"  # call more complicated grep function
 alias Find="_Find"  # call more complicated find function
-alias Sed="_Sed"  # call more complicated sed function
+alias Sed="_Sed"    # call more complicated sed function
 
 #- Movement
 alias ~="cd ~"
+alias ~~="cd $WHOME"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -49,8 +47,10 @@ alias .....l="cd ../../../..; ls"
 alias ....l="cd ../../..; ls"
 alias ...l="cd ../..; ls"
 alias ..l="cd ..; ls"
+alias cl="cdThenLs"      # change directory and run ls command
 alias cdn="cdNewestDir"  # change to newest director
 alias cdo="cdOldestDir"  # change to oldest director
+alias sd="saveDir "      # save a directory to a var; call that var to cd
 
 #- Software
 #- OpenFOAM
@@ -93,7 +93,7 @@ alias gca="git commit --amend -C HEAD"
 alias grm="_grm"
 alias grmr="_grmr"
 #- Other
-alias pyProfile="python -m cProfile"
+alias pyProfile="python -m cProfile"  # profile Python code
 function vman {
     #- Vman - https://github.com/jez/vim-superman
     vim -c "set scrolloff=999|SuperMan $*"
@@ -118,10 +118,7 @@ alias szrc="source ~/.zshrc"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
 alias sourceFoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
-alias todo="vi ~/Dropbox/quick_save/TODO/TODO.md"
-alias tdo="todo"
-alias todo2pdf="pandoc ~/Dropbox/quick_save/TODO/TODO.md --latex-engine=xelatex -o ~/Dropbox/quick_save/TODO.pdf; open ~/Dropbox/quick_save/TODO.pdf"
-alias dotVim="cd ~/.vim"
+alias todo="vi ~/TODO.md"
 
 ################################
 # Functions
@@ -228,15 +225,13 @@ function _grmr {
 
 #- Function to run optionset.py utility with bash completion
 function os { optionset.py "$@" --bash-completion; source ~/.optionset/bash_completion; }
-function debug_os { ./optionset.py "$@" --b -d; source ~/.optionset/bash_completion; }
 
 ###############################
 # Settings
 ###############################
 if [ -n "$BASH_VERSION" ]; then  # if running bash
     #- Set command-line prompt
-    source ~/.bash_colors
-    export PS1="\[$txtylw\][\t]\[$txtcyn\][\!]\[$txtgrn\]\u\[$txtgrn\]@\[$txtgrn\]\h:\[$bldblu\]\W\[$txtrst\]\$\[$txtrst\] "
+    export PS1="\\e[0;33m\][\t]\\e[0;36m\][\!]\\e[0;32m\]\u\\e[0;32m\]@\\e[0;32m\]\h:\\e[1;34m\]\W\\e[0m\]\$\\e[0m\] "
 
     #- History Customization
     HISTFILESIZE=1000
