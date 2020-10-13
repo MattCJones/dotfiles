@@ -2,6 +2,7 @@
 " Matt's Vim Configuration File
 "   ':help <command>' for help
 "   ':help user-manual' to learn Vim
+"   ':h vim-script-intro' to learn Vim Script
 "   ':set all?' to see currently set configuration settings
 "   ':set all&' to set default settings
 "   ':source $MYVIMRC' to update configuration changes
@@ -46,6 +47,7 @@ set matchpairs+=<:>             " match < > with %
 set mouse=n                     " enable use of mouse in normal mode
 set number                      " line numbers; use with relativenumber
 set relativenumber              " relative line numbers
+set splitright                  " open vertical splits on right hand side
 set scrolloff=0                 " lines of buffer from top/bottom of display
 set spelllang=en_us             " US dictionary for spell check
 set nostartofline               " stay in column when C-d, C-u, C-b, C-f
@@ -54,7 +56,7 @@ set viminfo-=<50,s10            " save large yanks after close
 set nowritebackup               " no backup before writing file
 
 "- Command prompt completion
-set wildignore=*.o,*~,*.pyc,*.dep,*.png,*.jpg,*.gif,*.swp
+set wildignore=*.o,*~,*.pyc,__pycache__,*.dep,*.png,*.jpg,*.gif,*.swp
 set wildmode=longest,list  " complete common match then show available
 set wildcharm=<C-z>  " used in macros to initiate <S-Tab> completion
 
@@ -261,8 +263,8 @@ iab TODO>> TODO <C-r>=strftime('%F')<CR>
 "- To check set appearances, use ':verbose hi'
 "- Search online for 'xterm 256 colors' to see visual array
 if !exists('g:loaded_plug')  " if plugins are disabled
-  highlight ColorColumn ctermbg=255
-  highlight LineNr ctermbg=255
+  highlight ColorColumn ctermbg=254
+  highlight LineNr ctermbg=254
 endif
 
 "- Function: return string if paste is active
@@ -288,9 +290,10 @@ set statusline+=%-4(\ %c%)\|%12(\ %l/%L\ %P%) " column and line information
 
 " Commands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- Full screen help
+"- Full screen help and vertical screen help
 command! -nargs=1 -complete=help H help <args> | silent only
-"- Aliases
+command! -nargs=1 -complete=help Vh vertical help <args> | silent
+"- Aliases to open commonly-used files
 command! Vrc edit $MYVIMRC
 command! Vrcp edit ~/.vim/vimrc_plugins
 command! Vrco edit ~/.vim/vimrc_openfoam
@@ -339,7 +342,7 @@ augroup END
 "- Use literal tabs in a make file
 augroup makeFiles
   autocmd!
-  autocmd FileType make set noexpandtab
+  autocmd FileType make setlocal noexpandtab
 augroup END
 
 "- Turn on spell check for certain file types; use i_ctrl-s to complete
