@@ -35,6 +35,7 @@ alias Sed="_Sed"    # call more complicated sed function
 #- Movement
 alias ~="cd ~"
 alias ~~="cd $WHOME"
+alias dotvim="cd ~/.vim"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."

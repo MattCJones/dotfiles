@@ -4,8 +4,40 @@
 " Useful Vim settings for working with OpenFOAM
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Script Variables {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Regular expression that matches an OpenFOAM makefile include file
+"- Example: -I$(LIB_SRC)/transportModels \ 
+let s:re_foamincludefile='\v\s*\zs-I[A-Z_)($]*\/(\w+|\/)+\ze[^-]*'
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " Commands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Parse OpenFOAM makefile included file into Vim-readable file
+function! FoamIncludeExpression(fname)
+  "- See $WM_PROJECT_DIR/wmake/makefiles/general
+  return substitute(a:fname,'-I$(LIB_SRC)','$FOAM_SRC','g')
+endfunction
+
+"- Add OpenFOAM Make/options files to Vim path
+"- Allows for searching path with [_CTRL-i, [_CTRL-d, CTRL-w_i, CTRL-w_d, etc.
+function! s:ParseFoamMakefile(...)
+  let l:makefile = a:0==0 ? './Make/options' : a:1
+  echom "Building path from linked files in " . l:makefile
+  for l:line in readfile(l:makefile)
+    let l:line = substitute(l:line,'\s+',' ','g')  " remove extra spaces
+    let l:words = split(l:line,' ')  " split line into words
+    for l:word in l:words
+      let l:match = matchstr(l:word,s:re_foamincludefile)
+      if strlen(l:match)  " if OpenFOAM include file is matched
+        let l:fname = FoamIncludeExpression(l:match)
+        execute "set path+=" . l:fname
+      endif
+    endfor
+  endfor
+endfunction
+command! -nargs=? -complete=file FoamProjectPaths call s:ParseFoamMakefile(<q-args>)
+
 "- Build ctags using current directory and source files; DEP: Ctags
 command! FoamCtags
     \ !find . $FOAM_SRC $FOAM_APP -name "*.[CH]" -type f 
@@ -16,18 +48,32 @@ command! FoamCtags
 " Autocommands {{{1
 " -----------------------------------------------------------------------------
 "- Detect OpenFOAM filetype
-function! CheckFoamFileType()
+function! s:CheckFoamFileType()
   for nL in range(1,10)  " loop through the first 10 lines
     if (getline(nL) =~ 'FoamFile' || getline(nL) =~ '\\      /  F ield')
-      setfiletype cpp  " cpp, foam
+      setfiletype foam_cpp
       break
     endif
   endfor
 endfunction
+
+" Set settings to recognize linked file paths in OpenFOAM makefile
+function! s:FoamIncludeSettings()
+  " Need to backslash backslashes '\' and pipes '|' here
+  let l:re_foamincludefile = substitute(s:re_foamincludefile,'\\','\\\\','g')
+  let l:re_foamincludefile = substitute(l:re_foamincludefile,'|','\\|','g')
+  execute "setlocal include=" . l:re_foamincludefile
+  setlocal includeexpr=FoamIncludeExpression(v:fname)
+endfunction
+
 augroup FOAMCmds
   autocmd!
-  autocmd BufRead * call CheckFoamFileType()
-  autocmd BufRead files,options setfiletype foam_make | set syntax=make
+  autocmd BufRead * call s:CheckFoamFileType()
+  autocmd BufRead files,options setfiletype foam_make | setlocal syntax=make
+      \ | call s:FoamIncludeSettings()
+      \ | silent! call s:ParseFoamMakefile()
+  autocmd FileType foam_cpp setlocal syntax=cpp 
+      \ | silent! call s:ParseFoamMakefile()
 augroup End
 " -----------------------------------------------------------------------------
 " }}}1

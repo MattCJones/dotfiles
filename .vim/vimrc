@@ -304,7 +304,9 @@ command! Bma edit ~/.bash_matt
 command! Brc edit ~/.bashrc
 command! Bpr edit ~/.bash_profile
 command! Bal edit ~/.bash_aliases
-"- Close all buffers but current
+"- Delete buffer but keep split intact
+command! Bd silent! execute "b#|bd#"
+"- Delete all buffers but current
 command! BufOnly silent! execute "%bd|e#|bd#"
 "- Build tags using external ctags program; run from project's base directory
 command! Ctags !ctags -R .
@@ -356,7 +358,8 @@ augroup END
 "- format options that are added when loading a Vim filetype
 augroup vimFiles
   autocmd!
-  autocmd FileType vim setlocal foldmethod=marker foldlevel=1
+  autocmd FileType vim setlocal foldmethod=marker foldlevel=1 
+      \ tabstop=2 shiftwidth=2 softtabstop=2
 augroup END
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
