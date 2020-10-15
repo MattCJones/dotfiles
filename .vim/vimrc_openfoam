@@ -16,7 +16,9 @@ let s:re_foamincludefile='\v\s*\zs-I[A-Z_)($]*\/(\w+|\/)+\ze[^-]*'
 "- Parse OpenFOAM makefile included file into Vim-readable file
 function! FoamIncludeExpression(fname)
   "- See $WM_PROJECT_DIR/wmake/makefiles/general
-  return substitute(a:fname,'-I$(LIB_SRC)','$FOAM_SRC','g')
+  let l:fname = substitute(a:fname,'-I$(LIB_SRC)','$FOAM_SRC','g')
+  let l:fname = substitute(l:fname,'-I$(FOAM_APP)','$FOAM_APP','g')
+  return l:fname
 endfunction
 
 "- Add OpenFOAM Make/options files to Vim path
@@ -36,12 +38,31 @@ function! s:ParseFoamMakefile(...)
     endfor
   endfor
 endfunction
-command! -nargs=? -complete=file FoamProjectPaths call s:ParseFoamMakefile(<q-args>)
+command! -nargs=? -complete=file FoamProject
+    \ call s:ParseFoamMakefile(<q-args>)
 
 "- Build ctags using current directory and source files; DEP: Ctags
-command! FoamCtags
-    \ !find . $FOAM_SRC $FOAM_APP -name "*.[CH]" -type f 
-    \ -not -path "*lnInclude*" | ctags --totals --fields=+l -L -
+"- Use g] Ctrl-] and Ctrl-t to navigate tags
+let g:ctags_options = "--totals --fields=+l"
+
+"- Reference entire source code
+function! s:BuildCtags()
+  let l:find_cmd = "find . $FOAM_SRC $FOAM_APP $FOAM_ETC -name \\'*.[CH]\\'"
+      \ . " -not -path '*lnInclude*'"
+  let l:ctags_cmd = "ctags -L -"
+  execute '!eval ' . l:find_cmd . ' \| ' . l:ctags_cmd . " " . g:ctags_options
+endfunction
+command! FoamCtags call s:BuildCtags()
+
+"- Reference source code based on makefile
+function! s:BuildCtagsPrecise()
+  let l:find_cmd = "find . \$(cat Make/options \| grep '\\-I' \|"
+      \ . " tr -d ' \\\\' \| sed 's/-I/ /g' \|"
+      \ . " sed 's/$(LIB_SRC)/$FOAM_SRC/g') -name \\'*.[CH]\\'"
+  let l:ctags_cmd = "ctags -L -"
+  execute '!eval ' . l:find_cmd . ' \| ' . l:ctags_cmd . " " . g:ctags_options
+endfunction
+command! FoamCtagsPrecise call s:BuildCtagsPrecise()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
@@ -72,6 +93,7 @@ augroup FOAMCmds
   autocmd BufRead files,options setfiletype foam_make | setlocal syntax=make
       \ | call s:FoamIncludeSettings()
       \ | silent! call s:ParseFoamMakefile()
+  autocmd FileType cpp silent! call s:ParseFoamMakefile()
   autocmd FileType foam_cpp setlocal syntax=cpp 
       \ | silent! call s:ParseFoamMakefile()
 augroup End

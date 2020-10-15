@@ -20,7 +20,7 @@ source $VIMRUNTIME/defaults.vim
 silent! packadd! cfilter  " 'Cfilter /PAT/' to filter quickfix list
 
 "- Load user OpenFOAM settings
-if filereadable(expand(user_plugins_path))
+if filereadable(expand(user_openfoam_path))
   execute "source " . user_openfoam_path
 endif
 
@@ -61,8 +61,9 @@ set wildmode=longest,list  " complete common match then show available
 set wildcharm=<C-z>  " used in macros to initiate <S-Tab> completion
 
 "- Searching
-set ignorecase  " use with smartcase
-set smartcase   " foo matches Foo and FOO; Foo matches Foo
+set ignorecase     " use with smartcase
+set smartcase      " foo matches Foo and FOO; Foo matches Foo
+set tagcase=match  " match case for tags
 
 "- Tab with spaces
 set autoindent     " copy indent from current line to new line
@@ -111,7 +112,8 @@ cnoremap <C-d> <Delete>
 "- Remap <C-f> for opening command line editor window
 set cedit=<C-y>
 "- Quickly edit macros e.g. '"<register><leader>m'; must match cedit key bind
-nnoremap <leader>m :<C-u><C-r>= 'let @'. v:register .' = '. string(getreg(v:register))<CR><C-e>
+nnoremap <leader>m :<C-u><C-r>= 'let @'. v:register .'
+    \ = '. string(getreg(v:register))<CR><C-e>
 
 "- File explore
 nnoremap <leader>e :Explore<CR>
@@ -128,7 +130,7 @@ nnoremap yol :setlocal list!<CR>
 "- Toggle relative line number
 nnoremap yon :setlocal number! relativenumber! signcolumn=no<CR>
 
-"- Toggle scrolloff to maximum so that screen moves with j and k (like ctrl-z)
+"- Toggle scrolloff to maximum so that screen moves with j and k (like Ctrl-z)
 nnoremap yoz :let &scrolloff=999-&scrolloff<CR>
 
 "- Toggle paste
@@ -366,9 +368,10 @@ augroup END
 
 " Working with Tmux {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- Code snippet from:
-"- https://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
+"- Set Ctrl-hjkl to move between windows
 if exists('$TMUX')
+  "- Code snippet from:
+  "- https://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
   function! TmuxOrSplitSwitch(wincmd, tmuxdir)
     let previous_winnr = winnr()
     silent! execute "wincmd " . a:wincmd
@@ -377,8 +380,8 @@ if exists('$TMUX')
       redraw!
     endif
   endfunction
-
-  let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
+  let previous_title = substitute(
+        \system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
   let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
   let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
 
@@ -386,7 +389,7 @@ if exists('$TMUX')
   nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
   nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
   nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
-else
+else  " no Tmux
   nnoremap <C-h> <C-w>h
   nnoremap <C-j> <C-w>j
   nnoremap <C-k> <C-w>k
@@ -406,15 +409,12 @@ endif
 "-   vi -u NONE -N -c "v/foo/d|wq" fooAndBar.txt
 "-   vi -u NONE -N +"v/foo/d|wq" fooAndBar.txt
 "-   vi -u NONE -N -s normalCmdsScript.vim fooAndBar.txt
-
 "- In normalCmdsScript.vim
 "-   :v/foo/d<CR>:wq<CR>
-
-"- In fooAndBar.txt
+"- In fooAndBar.txt before modification
 "-   This line has a bar and a foo
 "-   This line only has a bar
 "-   This line only has a foo
-
 "- In fooAndBar.txt after modification
 "-   This line only has a bar
 "------------------------------------------------------------------------------

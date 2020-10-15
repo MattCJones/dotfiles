@@ -19,12 +19,13 @@ alias lsp="showFullPath"  # show pull path
 alias lsd="ls -d */"  # show only directories
 alias agrep="alias | grep"
 alias sgrep="set | grep"
+alias asgrep="_asgrep"
 alias md="mkdir"
 alias rd="rmdir"
 alias cpr="cp -r"
 alias rmr="rm -r"
 alias rmrf="rm -rf"
-alias rml="removeSymLinksInDir "  # remove symbolic links in a directory
+alias rml="removeSymLinksInDir"  # remove symbolic links in a directory
 alias s="ls"
 alias sl="ls"
 alias lns="ln -s"
@@ -66,7 +67,7 @@ alias ipy3="ipython3 --pylab --profile=matt"
 #- Tarballing
 alias tarx="tar -xvzf"
 alias tarc="tarBallCompress"
-alias dus="du -Psckxh * | sort -n"
+alias dus="du -Psckxh * | sort -h"
 #- Vim
 alias vin="vim -u NONE -N"  # set :finish at breakpoints in vimrc when debugging
 alias vip="vim -"  # pipe output into Vim
@@ -95,13 +96,6 @@ alias grm="_grm"
 alias grmr="_grmr"
 #- Other
 alias pyProfile="python -m cProfile"  # profile Python code
-function vman {
-    #- Vman - https://github.com/jez/vim-superman
-    vim -c "set scrolloff=999|SuperMan $*"
-    if [ "$?" != "0" ]; then
-        echo "No manual entry for $*"
-    fi
-}
 
 #- Configuration files
 alias tco="vi ~/.tmux.conf"
@@ -124,10 +118,22 @@ alias todo="vi ~/TODO.md"
 ################################
 # Functions
 ################################
-function cdThenLs {
-    #- Help with cd ls; cd ls; cd ls; etc...
-    cd $1
-    ls -G;
+function showFullPath {
+    #- Show the full path to a set of files from ls
+    if [[ -z $1 ]]; then  # if input is not given
+        ls -d -1 $PWD/*
+    else
+        for f in "$@"; do
+            ls -d -1 $PWD/$f
+        done
+    fi
+}
+
+function _asgrep {
+    #- Search alias and set
+    alias | grep $1
+    set | grep $1
+    type $1
 }
 
 function removeSymLinksInDir {
@@ -137,21 +143,6 @@ function removeSymLinksInDir {
         dir="$1"
     fi
     find $dir -maxdepth 1 -type l -exec rm {} \;
-}
-
-function saveDir {
-    #- Save a directory as an alias for later
-    eval "alias $1='cd $PWD'";
-}
-
-function cdNewestDir {
-    #- Move into the most recently-modified directory
-    cd "$(\ls -1dt ./*/ | head -n 1)";
-}
-
-function cdOldestDir {
-    #- Move into the least recently-modified directory
-    cd "$(\ls -1dt ./*/ | tail -n 1)";
 }
 
 function _Grep {
@@ -180,15 +171,25 @@ function _Sed {
     eval $cmd
 }
 
-function showFullPath {
-    #- Show the full path to a set of files from ls
-    if [[ -z $1 ]]; then  # if input is not given
-        ls -d -1 $PWD/*
-    else
-        for f in "$@"; do
-            ls -d -1 $PWD/$f
-        done
-    fi
+function cdThenLs {
+    #- Help with cd ls; cd ls; cd ls; etc...
+    cd $1
+    ls -G;
+}
+
+function cdNewestDir {
+    #- Move into the most recently-modified directory
+    cd "$(\ls -1dt ./*/ | head -n 1)";
+}
+
+function cdOldestDir {
+    #- Move into the least recently-modified directory
+    cd "$(\ls -1dt ./*/ | tail -n 1)";
+}
+
+function saveDir {
+    #- Save a directory as an alias for later
+    eval "alias $1='cd $PWD'";
 }
 
 function sbatchAllInDir {
@@ -226,6 +227,15 @@ function _grmr {
 
 #- Function to run optionset.py utility with bash completion
 function os { optionset.py "$@" --bash-completion; source ~/.optionset/bash_completion; }
+
+#- View manual with vim
+function vman {
+    #- Vman - https://github.com/jez/vim-superman
+    vim -c "set scrolloff=999|SuperMan $*"
+    if [ "$?" != "0" ]; then
+        echo "No manual entry for $*"
+    fi
+}
 
 ###############################
 # Settings
