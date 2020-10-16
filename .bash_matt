@@ -17,6 +17,8 @@ alias la="ls -A"
 alias l="ls -CF"
 alias lsp="showFullPath"  # show pull path
 alias lsd="ls -d */"  # show only directories
+alias ag="ag --color-path '0;35' --color-line-number '0;32' --color-match '1;31'"
+alias grep="grep --color --exclude-dir='.git'"
 alias agrep="alias | grep"
 alias sgrep="set | grep"
 alias asgrep="_asgrep"
@@ -149,8 +151,9 @@ function _Grep {
     #- Fill out commonly used grep options
     searchStr="$1"
     shift
-    cmd="grep -rnE --exclude-dir='.git' $@ $searchStr *"
-    echo $cmd; eval $cmd
+    cmd="grep -rnE --exclude-dir='.git' $@ $searchStr"
+    echo $cmd
+    eval $cmd
 }
 
 function _Find {
@@ -158,7 +161,8 @@ function _Find {
     searchStr="$1"
     shift
     cmd="find . -regextype posix-extended -name $searchStr $@"
-    echo $cmd; eval $cmd
+    echo $cmd
+    eval $cmd
 }
 
 function _Sed {
@@ -195,16 +199,22 @@ function saveDir {
 function sbatchAllInDir {
     #- Submit jobs in all base level subdirectories of input directory
     inDir=$1
+    runFile=$2
     if [ -z "$inDir" ]; then
         echo "Error! No target directory. Exiting."
         exit
     fi
+    if [ -z "$runFile" ]; then
+        runFile="run.sh"
+    fi
     echo "Running jobs in $inDir"
     for dir in $inDir/*/; do  # loop through base level subdirectories
-        runFile="$inDir/run.sh"
+        cd $dir
         if [ -f "$runFile" ]; then
-            sbatch $runFile
+            cmd = "sbatch $runFile"
+            echo && echo $cmd && eval $cmd
         fi
+        cd - > /dev/null
     done
 }
 

@@ -1,0 +1,426 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Matt's Vim Plugins Configuration File
+"
+"   View loaded addons with :scriptnames
+"   Profile Vim to identify slow plugins:
+"   alias vimProfile="vim --cmd 'profile start vimrc.profile' \
+"     --cmd 'profile! file ~/.vimrc'"
+"   @slow = slow addon
+"   @min  = minimal use addon
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"- Preamble {{{1
+" -----------------------------------------------------------------------------
+" -----------------------------------------------------------------------------
+" }}}1
+
+"- Vim-Plug List {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+" ----------------------------------------------------------
+"- Appearance
+Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'  " status bar
+Plug 'chrisbra/Colorizer'  " :ColorToggle toggle colors #ff0000 red @slow
+Plug 'flazz/vim-colorschemes'  " color schemes
+Plug 'kshenoy/vim-signature'  " put marks in the sign column
+Plug 'mhinz/vim-startify'  " better start screen, list mru files
+"- Pandoc integration for pdf to md; syntax highlighting for markdown etc.
+Plug 'vim-pandoc/vim-pandoc' | Plug 'vim-pandoc/vim-pandoc-syntax'
+
+"- Editing
+Plug 'tpope/vim-abolish'  " ':%S/foo{,s}/bar{,s}/g'; crs (coerce to snake_case)
+Plug 'tpope/vim-commentary'  " gcc or gc<movement>
+Plug 'junegunn/vim-easy-align'  " tabulate text with ga<movement>
+Plug 'tommcdo/vim-exchange'  " swap words: 'cxiw' or 'viwX' on 1st word, . on 2nd
+Plug 'tpope/vim-repeat'  " repeat surround and other addons
+Plug 'tpope/vim-sleuth'  " automatic tab sizing, sometimes makes mistakes
+Plug 'tpope/vim-surround'  " cs', ys', yss', ysw', S in visual
+Plug 'AndrewRadev/switch.vim'  " toggle True/False
+
+"- General utility
+Plug 'tpope/vim-dispatch'  " compiling code from within Vim
+Plug 'Lokaltog/vim-easymotion'  " or look into sneak(seems better designed)
+Plug 'tpope/vim-eunuch'  " Unix commands in Vim s/a :Find, :Rename :Chmod etc.
+Plug 'bruno-/vim-husk'  " Emacs/Bash movement in cmdline (ctrl-f, ctrl-b, etc.)
+Plug 'tpope/vim-scriptease'  " g== and g=<movement> to eval text and much more
+Plug 'tpope/vim-unimpaired'  " [e [<Space> ., movement ([q [f [b ...) mappings (yos )
+
+"- Text completion
+Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'  " customizable snippets
+"- Youcompleteme - unified tab completion; requires external build @slow
+"Plug 'valloric/youcompleteme' | Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}  " DEP: Clang
+"- Consider mucomplete (lightweight compared to Youcompleteme)
+" Plug 'lifepillar/vim-mucomplete'  " minimal completion engine
+" Plug 'davidhalter/jedi-vim'  " use with vim-mucomplete
+"- Consider deoplete
+"Plug 'Shougo/deoplete.nvim'
+"Plug 'roxma/nvim-yarp'
+"Plug 'roxma/vim-hug-neovim-rpc'
+"Plug 'deoplete-plugins/deoplete-jedi'  " DEP: pip3 install --user jedi
+
+"- Syntax checking
+Plug 'w0rp/ale'  " asynchronous syntax checking and linting, :ALEToggle
+"Plug 'sheerun/vim-polyglot'  " syntax colors for many languages, messes up airfoil files
+"Plug 'jbmorgado/vim-pine-script'  " edit TradingView Pinee script
+"Plug 'effi/vim-OpenFoam-syntax'  " Vim syntax - opens extra buffers :(;  or use Tobias's; manual install
+"Plug 'lervag/vim-foam'  " doesn't work very well; good to just manually set up .vim/syntax
+
+"- Git tools
+Plug 'tpope/vim-fugitive'  " :Gdiff
+Plug 'airblade/vim-gitgutter'  " ]c, [c to jump; refresh with :GitGutterAll @slow
+Plug 'gregsexton/gitv'  " view git info; 2 modes: :Gitv(browser) :Gitv!(file)
+" Plug 'mhinz/vim-signify'  " ]c, [c to jump; more responsive, less pretty than gitgutter @slow
+
+"- Inspection and navigation
+Plug 'tpope/vim-characterize'  " enhances ga
+Plug 'jez/vim-superman'  " terminal 'vman' instead of 'man'; run 'man' first
+"Plug 'ludovicchabant/vim-gutentags'  " 'just works' automatic use of ctags
+Plug 'majutsushi/tagbar'  " good for big code file with lots of functions, DEP: ctags
+Plug 'mbbill/undotree'  " navigate undo branches in ':changes'
+"- Unite - view more under EXTERNAL SOURCES in :h Unite
+Plug 'Shougo/unite.vim'  " fuzzy finder for everything
+"Plug 'termoshtt/unite-bibtex'  " look through bibtex library; requires pybtex
+Plug 'ujihisa/unite-colorscheme'  " look through colorschemes
+Plug 'Shougo/unite-help'  " help with :h
+Plug 'thinca/vim-unite-history'  " command and search history
+Plug 'Shougo/neomru.vim'  " most-recently-used (MRU)
+Plug 'Shougo/neoyank.vim'  " yank history
+"Plug 'Shougo/unite-outline'  " parse current file and load headers as outline; 2020-10-11: broken
+Plug 'osyo-manga/unite-quickfix'  " write Unite results to quickfixlist
+Plug 'tsukkee/unite-tag'  " look through tags
+Plug 'Shougo/vimfiler.vim'  " replacement for NERD-tree
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " asynchronous
+
+"" Tmux plugins
+Plug 'edkolev/tmuxline.vim'  " airline bar in Tmux
+" Vimux - interact with Tmux; <leader>vp <leader>vl
+Plug 'benmills/vimux'  " interact with Tmux
+Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
+"Plug 'jgors/vimux-ipy'   " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
+"Plug 'julienr/vim-cellmode'  " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
+"Plug 'ivanov/vim-ipython'  " highest rated, more advanced vim-cellmode, overwrites ctrl-s
+Plug 'jpalardy/vim-slime'  " send output to Tmux, does not work well w/ multi-line python; tslime would also work
+
+"- Text objects: https://github.com/kana/vim-textobj-user/wiki
+Plug 'wellle/targets.vim'  " ,.;:+-=~_*#/|\&$ (one key faster than 'between')
+"- Textobj-user plugins
+Plug 'kana/vim-textobj-user'  " DEP for rest
+Plug 'thinca/vim-textobj-between'  " matching characters: af{char} if{char}
+Plug 'glts/vim-textobj-comment'  " capture comment blocks: ac ic
+Plug 'kana/vim-textobj-indent'  " similar indentation: ai ii, exact indentation: aI iI
+Plug 'glts/vim-textobj-indblock'  " whitespace of indentation: ao io
+Plug 'kana/vim-textobj-syntax'  " similar syntax: ay iy
+Plug 'kana/vim-textobj-entire'  " entire document: ie ae, saves on ggVG
+Plug 'kana/vim-textobj-line'  " current line: al il
+"Plug 'kana/vim-textobj-lastpat'  " highlighted matches: a/ i/ a? i?, (just use gn gN)
+"Plug 'kana/vim-textobj-fold'  " folds: az iz, not very useful
+"Plug 'coderifous/textobj-word-column.vim'  " word column: ac ic aC iC (CONFLICT w/ comment)
+"Plug 'Julian/vim-textobj-variable-segment'  " between camelCase or snake_case: av iv
+
+"- Newly added
+
+"- Consider
+" Plug 'thinca/vim-quickrun' - run commands on file quickly, :QuickRun -python
+"- Gnupg.vim - plugin allows easy work with encrypted text files
+
+"- Rarely used
+
+"- Don't like
+"Plug 'rking/ag.vim'  " improved grep, :Ag [options] {pattern} [{directory}]; DEP: ag
+"Plug 'kien/ctrlp.vim'  " fuzzy file name finder; (replaced by unite)
+"Plug 'terryma/vim-multiple-cursors'  " multiple cursors, unnecessary but fun
+"Plug 'scrooloose/nerdtree'  " file explorer, buggy, don't like, breaks defaults
+"Plug 'justinmk/vim-sneak'  " breaks default capabilities
+"Plug 'zef/vim-cycle'  " toggle on/off, true/false, etc w/ CTRL-a (inferior to switch)
+"Plug 'unblevable/quick-scope'  " highlight f F t T nearest letters; fun plugin
+"Plug 'vimwiki'  " create notes/wiki pages
+"Plug 'itchyny/lightline.vim'  " replacement for vim-airline?
+"Plug 'tpope/vim-rsi'  " command line keys in insert and command mode; prefer vim-eunuch
+"Plug 'nelstrom/vim-visual-star-search'  " * and # search highlighted text, <leader>* for grep; BUG: overwrites 0 register when visual searching decimal number
+"Plug 'godlygeek/tabular'  " :Tabularize / searchTerm; (replaced by vim-easy-align)
+"Plug 'severin-lemaignan/vim-minimap'  " build minimap of code; interesting but unhelpful
+"Plug 'moll/vim-bbye'  " delete a buffer but keep split intact; otherwise: :b#|bd#
+"Plug 'vim-scripts/BufOnly.vim'  " delete all buffers but current, :BufOnly
+"Plug 'scrooloose/syntastic'  " non-asynchronous syntax checking; prefer Ale @slow
+"Plug 'sjl/gundo.vim'  " visualize undo tree; requires Python 2.4+
+"Plug 'christoomey/vim-tmux-navigator'  " ctrl-hjkl through Vim and Tmux; added this functionality in my vimrc
+
+" -----------------------------------------------------------------------------
+call plug#end()  " initialize plugin system
+"- Put non-plugin stuff after this line
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+"- Individual Plugin Settings {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- General utility functions
+" -----------------------------------------------------------------------------
+command! PlugList echo g:plugs_order  " list loaded plugins
+" -----------------------------------------------------------------------------
+
+"- Vim-Airline and Tmuxline
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
+  "- Airline
+  let g:airline#extensions#tabline#enabled = 1  " 1 to display buffers at top
+  let g:airline#extensions#tabline#buffer_idx_mode = 1  " show buffer numbers
+  let g:airline_section_warning = ''
+  let g:airline_symbols_ascii = 1  " unicode doesn't work properly
+  "- Tmuxline
+  "- Start with :Tmuxline
+  "- See :h Tmuxline for settings
+  if exists('$TMUX')
+    "- Custom line: (grab these from ~/.tmux.conf
+    let g:tmuxline_preset = {
+        \'a'    : '#[fg=black][#[fg=colour56]#S,#[fg=colour4]#I,#[fg=colour6]#P#[fg=black]]',
+        \'b'    : '',
+        \'c'    : '',
+        \'win'  : '#[fg=colour4]#[fg=default] #I:#(echo `basename #{pane_current_path}`)',
+        \'cwin' : '#[fg=colour4]#F#[fg=default]#I:#(echo `basename #{pane_current_path}`)',
+        \'x'    : '',
+        \'y'    : '%Y-%m-%d %H:%M',
+        \'z'    : '',
+        \'options' : {'status-justify' : 'left'}}
+    let g:tmuxline_powerline_separators = 0
+  endif
+endif
+" -----------------------------------------------------------------------------
+
+"- Colorscheme
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-colorschemes"]')  " find plugin name in g:plugs_order
+  "- Dark themes
+  " colorscheme iceberg
+
+  "- Light themes
+  colorscheme bubblegum-256-light
+  let g:airline_theme='bubblegum'  " if autoload fails
+
+  " colorscheme PaperColor
+  " let g:airline_theme='papercolor'  " if autoload fails
+
+  " colorscheme pencil
+  " let g:airline_theme='bubblegum'  " if autoload fails
+
+  " colorscheme nuvola
+  " let g:airline_theme='papercolor'  " if autoload fails
+
+  " colorscheme summerfruit256
+  " let g:airline_theme='bubblegum'  " if autoload fails
+endif
+" -----------------------------------------------------------------------------
+
+"- Vim-Dispatch
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-dispatch"]')  " find plugin name in g:plugs_order
+  "- With no arguments :Dispatch runs b:dispatch, use: let b:dispatch='python %'
+  autocmd FileType python let b:dispatch='python %'
+  nnoremap <F5> :Dispatch<CR>
+endif
+" -----------------------------------------------------------------------------
+
+"- EasyAlign
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-easy-align"]')  " find plugin name in g:plugs_order
+  "- Two options: ga as align and <leader>ga as ga org.  gA as align
+  "- Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+  vmap gA <Plug>(EasyAlign)
+  "- Start interactive EasyAlign for a motion/text object (e.g. gaip)
+  nmap gA <Plug>(EasyAlign)
+  "- Use ctrl-x or EasyAlign  with /word/ for regex
+  "- Ignore comments with ctrl-g
+  "- Set to left-align with ctrl-d
+  let g:easy_align_ignore_groups = []  " align even if text is commented
+endif
+" -----------------------------------------------------------------------------
+
+"- Easymotion
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-easymotion"]')  " find plugin name in g:plugs_order
+  let g:EasyMotion_do_mapping = 0  " Disable default mappings
+  map <leader><leader> <Plug>(easymotion-s)
+  map <Space><Space> <Plug>(easymotion-s)
+  highlight EasyMotionTarget2First ctermbg=none ctermfg=darkcyan
+  highlight EasyMotionTarget2Second ctermbg=none ctermfg=blue
+endif
+" -----------------------------------------------------------------------------
+
+"- Vim-Foam
+" -----------------------------------------------------------------------------
+if exists('user_openfoam_path')
+  let &runtimepath = '~/.vim/plugged/vim-foam,' . &runtimepath
+endif
+" -----------------------------------------------------------------------------
+
+"- Git-Gutter
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-gitgutter"]')  " find plugin name in g:plugs_order
+    "- Disable default mappings
+    let g:gitgutter_map_keys = 0
+    "- Reset these mappings only:
+    nmap ]c <Plug>(GitGutterNextHunk)
+    nmap [c <Plug>(GitGutterPrevHunk)
+endif
+" -----------------------------------------------------------------------------
+
+"- Undotree
+" -----------------------------------------------------------------------------
+if exists('g:plugs["undotree"]')  " find plugin name in g:plugs_order
+  nnoremap <leader>gu :UndotreeToggle<CR>
+endif
+" -----------------------------------------------------------------------------
+
+"- Markdown files and Pandoc
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-pandoc"]')  " find plugin name in g:plugs_order
+  let g:pandoc#keyboard#enabled_submodules = ["sections"]  " sections for [[ [] ][ ]] and viS vaS
+  "  default = ["lists", "references", "styles", "sections", "links"]
+  "let g:pandoc#keyboard#use_default_mappings = 0  " disable all Pandoc mappings
+  let g:pandoc#modules#disabled = ["chdir"]  " disable changing to file directory
+  "let g:pandoc#modules#disabled += ["folding"]  " disable folding
+endif
+" -----------------------------------------------------------------------------
+
+"- Mucomplete
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-mucomplete"]')  " find plugin name in g:plugs_order
+  let g:mucomplete#enable_auto_at_startup = 1
+  let g:mucomplete#buffer_relative_paths = 1
+  set shortmess+=c  " shut off completion messages
+  set completeopt-=preview
+  set completeopt+=menuone,longest,noinsert,noselect
+  "- Setup SyntaxComplete for every filetype that does not already have a
+  "- language specific OMNI script:
+  if has("autocmd") && exists("+omnifunc")
+    autocmd Filetype *
+      \ if &omnifunc == "" |
+      \   setlocal omnifunc=syntaxcomplete#Complete |
+      \ endif
+  endif
+endif
+" -----------------------------------------------------------------------------
+
+"- Switch
+" -----------------------------------------------------------------------------
+if exists('g:plugs["switch.vim"]')  " find plugin name in g:plugs_order
+"- Put upper case first " true enable
+let g:switch_custom_definitions =
+  \ [
+  \   ['On', 'Off'],
+  \   ['on', 'off'],
+  \   ['Yes', 'No'],
+  \   ['yes', 'no'],
+  \   ['1', '0'],
+  \   ['Enable', 'Disable'],
+  \   ['enable', 'disable'],
+  \   ['Enabled', 'Disabled'],
+  \   ['enabled', 'disabled'],
+  \   ['>', '<'],
+  \   ['>=', '<='],
+  \   ['==', '!='],
+  \   ['+', '-'],
+  \ ]
+endif
+" -----------------------------------------------------------------------------
+
+"- Vim-Slime
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vim-slime"]')  " find plugin name in g:plugs_order
+  let g:slime_target = "tmux"
+  "- Use <prefix>q to see pane numbers in Tmux
+  "- Set target pane with :2.1 for session 2 pane 1
+endif
+" -----------------------------------------------------------------------------
+
+"- Tagbar
+" -----------------------------------------------------------------------------
+if exists('g:plugs["tagbar"]')  " find plugin name in g:plugs_order
+  nmap <leader>t :Tagbar<CR>
+endif
+" -----------------------------------------------------------------------------
+
+"- Ultisnips
+" -----------------------------------------------------------------------------
+if exists('g:plugs["ultisnip s"]')  " find plugin name in g:plugs_order
+  "- Good for date, latex equations, everything else
+  "- Ultisnips working with YCM
+  let g:UltiSnipsExpandTrigger="<c-j>"
+  "- Ultisnips not recognizing .tex files
+  let g:tex_flavor = "latex"
+endif
+" -----------------------------------------------------------------------------
+
+"- Unite Options
+" -----------------------------------------------------------------------------
+if exists('g:plugs["unite.vim"]')  " find plugin name in g:plugs_order
+  "- Found these settings online
+  "- Use -auto-preview for preview of file
+  "- ':Unite source' to see possible sources
+  "- try -auto-resize -no-empty
+  call unite#filters#matcher_default#use(['matcher_fuzzy'])
+  let g:unite_source_history_yank_enable = 1
+  let g:unite_source_history_yank_limit = 28
+  nnoremap <leader>u :<C-u>Unite source<CR>
+  nnoremap <leader>us :<C-u>Unite source<CR>
+  if exists('g:plugs["vimproc.vim"]')  " find plugin name in g:plugs_order
+    nnoremap <leader>ue :<C-u>Unite -no-split -buffer-name=files file/async:!<CR>
+    nnoremap <leader>uf :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async:!<CR>
+  else
+    nnoremap <leader>ue :<C-u>Unite -no-split -buffer-name=files file<CR>
+    nnoremap <leader>uf :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec<CR>
+  endif
+  nnoremap <leader>um :<C-u>Unite -no-split -buffer-name=mru  -start-insert file_mru<CR>
+  "- Sample colorschemes appearances; press 'p' for preview
+  nnoremap <silent> <leader>ua :<C-u>silent! call UniteColorschemeSelect()<CR>
+  nnoremap <leader>ua :<C-u>Unite -buffer-name=colorscheme -vertical -winwidth=30 colorscheme<CR>
+  nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer buffer<CR>
+  nnoremap <leader>uc :<C-u>Unite output<CR>
+  nnoremap <leader>uh :<C-u>Unite help<CR>
+  nnoremap <leader>ut :<C-u>Unite tag<CR>
+  nnoremap <leader>uy :<C-u>Unite -buffer-name=yank history/yank<CR>
+  nnoremap <leader>uq :Unite -no-split -buffer-name=quickfix -auto-preview -no-empty quickfix<CR>
+  nnoremap <leader>u/ :Unite grep:.<CR>
+
+  "- Custom mappings for the unite buffer
+  function! s:unite_settings()
+    " Enable navigation with control-j and control-k in insert mode
+    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+  endfunction
+  autocmd FileType unite call s:unite_settings()
+endif
+" -----------------------------------------------------------------------------
+
+"- Vimfiler
+" -----------------------------------------------------------------------------
+if exists('g:plugs["vimfiler.vim"]')  " find plugin name in g:plugs_order
+  nmap <leader>E :VimFilerExplorer<CR>
+  let g:vimfiler_ignore_pattern = '^\%(\.git\|\.DS_Store\)$'
+endif
+" -----------------------------------------------------------------------------
+
+"- Vimux
+" -----------------------------------------------------------------------------
+ map <Leader>vp :VimuxPromptCommand<CR>
+ map <Leader>vl :VimuxRunLastCommand<CR>
+" -----------------------------------------------------------------------------
+
+"- Youcompleteme YCM
+" -----------------------------------------------------------------------------
+if exists('g:plugs["youcompleteme"]')  " find plugin name in g:plugs_order
+  "let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+  "- Make sure this is the Python path used at compilation: 'python3 install.py --all'
+  "let g:ycm_path_to_python_interpreter = '/home/mcjones/anaconda3/bin/python'
+  let g:ycm_confirm_extra_conf = 0  " turn off confirmation
+  "- Get completions from tags; be sure to sure exuberant ctags with '--fields=+l'
+  let g:ycm_collect_identifiers_from_tags_files = 1
+  "- OpenFOAM YCM-Generator
+  command! FoamYcmGen YcmGenerateConfig -verbose --preserve-environment --force
+endif
+" -----------------------------------------------------------------------------
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
