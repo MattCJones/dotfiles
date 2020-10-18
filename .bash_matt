@@ -17,6 +17,7 @@ alias la="ls -A"
 alias l="ls -CF"
 alias lsp="showFullPath"  # show pull path
 alias lsd="ls -d */"  # show only directories
+alias hist="history"
 alias ag="ag --color-path '0;35' --color-line-number '0;32' --color-match '1;31'"
 alias grep="grep --color --exclude-dir='.git'"
 alias agrep="alias | grep"
@@ -71,8 +72,9 @@ alias tarx="tar -xvzf"
 alias tarc="tarBallCompress"
 alias dus="du -Psckxh * | sort -h"
 #- Vim
-alias vin="vim -u NONE -N"  # set :finish at breakpoints in vimrc when debugging
+alias vin="vim -N -u NONE"  # set :finish at breakpoints in vimrc when debugging
 alias vip="vim -"  # pipe output into Vim
+alias vinop="vim --noplugins"
 alias vir="vim -RmM"  # readonly mode
 alias vrc="vi ~/.vim/vimrc"
 alias vrcp="vi ~/.vim/vimrc_plugins"
@@ -238,7 +240,7 @@ function _grmr {
 #- Function to run optionset.py utility with bash completion
 function os { optionset.py "$@" --bash-completion; source ~/.optionset/bash_completion; }
 
-#- View manual with vim
+#- View manual with Vim
 function vman {
     #- Vman - https://github.com/jez/vim-superman
     vim -c "set scrolloff=999|SuperMan $*"
@@ -247,17 +249,20 @@ function vman {
     fi
 }
 
+#- Edit changed files with Vim
+function vigif { vi `git diff --name-only | uniq | xargs`; }
+
 ###############################
 # Settings
 ###############################
 if [ -n "$BASH_VERSION" ]; then  # if running bash
     #- Set command-line prompt
-    export PS1="\[\033[33m\][\t]\[\033[36m\][\!]\[\033[32m\]\u@\h\[\033[00m\]:\[\033[34m\]\W\[\033[00m\]\$ "
+    export PS1="\[\e[0;33m\][\t]\[\e[0;36m\][\!]\[\e[0;32m\]\u@\h\[\e[00m\]:\[\e[1;34m\]\W\[\e[0;00m\]\$ "
 
     #- History Customization
-    HISTFILESIZE=1000
-    HISTSIZE=1000
-    HISTCONTROL=ignoreboth  # ignore both white space lines and duplicates
+    export HISTFILESIZE=0
+    export HISTSIZE=1000
+    export HISTCONTROL=ignoreboth  # ignore white space lines and duplicates
     shopt -s histappend  # append to history file - don"t overwrite
 
     #- Use extended globs

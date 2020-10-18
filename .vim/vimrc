@@ -10,8 +10,11 @@
 
 " Preamble Load Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let user_plugins_path = "~/.vim/vimrc_plugins"
-let user_openfoam_path = "~/.vim/vimrc_openfoam"
+"- Allow user input of file paths, e.g., vi --cmd="let user_plugins_path=''"
+let user_plugins_path = exists('user_plugins_path') ? 
+    \ user_plugins_path : "~/.vim/vimrc_plugins" 
+let user_openfoam_path = exists('user_openfoam_path') ?
+    \ user_openfoam_path : "~/.vim/vimrc_openfoam"
 
 "- Load default Vim configuration
 source $VIMRUNTIME/defaults.vim
@@ -24,7 +27,7 @@ if filereadable(expand(user_openfoam_path))
   execute "source " . user_openfoam_path
 endif
 
-"- Load user plugins
+"- Load user plugins (disable from command line with --cmd "let g:noplug=1"
 if filereadable(expand(user_plugins_path))
   execute "source " . user_plugins_path
 endif
@@ -87,7 +90,7 @@ map <Space> <Leader>
 "- Buffer movement
 nnoremap <C-n> :bn<CR>
 nnoremap <C-p> :bp<CR>
-nnoremap <Leader>d :bdelete<CR>
+nnoremap <Leader>d :b#<CR>:bd#<CR>
 
 "- Rebind arrow keys to resize splits
 nnoremap <Left> 1<C-w><
@@ -121,8 +124,8 @@ nnoremap <Leader>e :Explore<CR>
 nnoremap <Leader>ge :e **/*<C-z><S-Tab>
 
 " Turn off highlighted values and refresh display with '<Leader>l' and 'yoh'
+nnoremap yoh :nohlsearch<CR><C-l>
 nnoremap <Leader>l :setlocal signcolumn=auto<CR>:nohlsearch<CR><C-l>
-nnoremap yoh :setlocal signcolumn=auto<CR>::nohlsearch<CR><C-l>
 
 "- Toggle list (display newlines and tabs)
 nnoremap yol :setlocal list!<CR>
@@ -134,6 +137,7 @@ nnoremap yon :setlocal number! relativenumber! signcolumn=no<CR>
 nnoremap yoz :let &scrolloff=999-&scrolloff<CR>
 
 "- Toggle paste
+nnoremap yop :set paste!<CR>:set paste?<CR>
 nnoremap <Leader>p :set paste!<CR>:set paste?<CR>
 
 "- Paste from clipboard (make sure X11 server is enabled)
@@ -286,14 +290,15 @@ set statusline+=\ %f                          " file path
 set statusline+=\ %h%w%m%r%{PasteStatus()}    " various status flags
 set statusline+=%=                            " separation of LHS and RHS
 set statusline+=\ %y                          " filetype
-set statusline+=%-4(\ %c%)\|%12(\ %l/%L\ %P%) " column and line information
+set statusline+=%-4(\ %c%)::%12(\ %l/%L\ %P%) " column and line information
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
 " Commands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- Buffers and windows
 "- Full screen help and vertical screen help
-command! -nargs=1 -complete=help H help <args> | silent only
+command! -nargs=1 -complete=help H help <args> | resize 999
 command! -nargs=1 -complete=help Vh vertical help <args> | silent
 "- Aliases to open commonly-used files
 command! Vrc edit $MYVIMRC
@@ -302,27 +307,30 @@ command! Vrco edit ~/.vim/vimrc_openfoam
 command! SVrc source $MYVIMRC
 command! Inst source $MYVIMRC | :PlugInstall
 command! Tco edit ~/.tmux.conf
-command! Bma edit ~/.bash_matt
 command! Brc edit ~/.bashrc
 command! Bpr edit ~/.bash_profile
 command! Bal edit ~/.bash_aliases
+command! Bma edit ~/.bash_matt
 "- Delete buffer but keep split intact
 command! Bd silent! execute "b#|bd#"
 "- Delete all buffers but current
 command! BufOnly silent! execute "%bd|e#|bd#"
+"- Open new buffer in a full window
+command! New new | only
+"- Open scratch buffer in a full window
+command! Scratch new | only | setlocal buftype=nofile bufhidden=hide noswapfile
+
 "- Build tags using external ctags program; run from project's base directory
 command! Ctags !ctags -R .
-"- Open new file in full window
-command! New new | only
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
 " Terminal Mode {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" For help :h :term
-" Remap <Esc> to change terminal to normal mode
+"- For help run :h :term
 if v:version >= 802
-  tnoremap <Esc> <C-W>N
+  "- Remap <C-w><Esc> to change terminal insert to normal mode 
+  tnoremap <C-w><Esc> <C-w>N
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1

@@ -95,14 +95,21 @@ Plug 'Shougo/vimfiler.vim'  " replacement for NERD-tree
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " asynchronous
 
 "" Tmux plugins
+Plug 'wellle/tmux-complete.vim'  " ctrl-x_ctrl-u complete anywhere from Tmux
+Plug 'tpope/vim-tbone'  " :Tmux to call any Tmux command with tab completion
 Plug 'edkolev/tmuxline.vim'  " airline bar in Tmux
-" Vimux - interact with Tmux; <leader>vp <leader>vl
+"- Send output to Tmux
+Plug 'jpalardy/vim-slime'  " send output to Tmux
+"- Vimux <leader>vp <leader>vl
 Plug 'benmills/vimux'  " interact with Tmux
 Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
 "Plug 'jgors/vimux-ipy'   " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
-"Plug 'julienr/vim-cellmode'  " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
 "Plug 'ivanov/vim-ipython'  " highest rated, more advanced vim-cellmode, overwrites ctrl-s
-Plug 'jpalardy/vim-slime'  " send output to Tmux, does not work well w/ multi-line python; tslime would also work
+"Plug 'julienr/vim-cellmode'  " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
+"- Don't like:
+"Plug 'roxma/vim-tmux-clipboard'  " seamless clipboard integration to " register
+"Plug 'tmux-plugins/vim-tmux-focus-events'  " use with vim-tmux-clipboard
+"Plug 'christoomey/vim-tmux-navigator'  " ctrl-hjkl through Vim and Tmux; added this functionality in my vimrc
 
 "- Text objects: https://github.com/kana/vim-textobj-user/wiki
 Plug 'wellle/targets.vim'  " ,.;:+-=~_*#/|\&$ (one key faster than 'between')
@@ -146,7 +153,6 @@ Plug 'kana/vim-textobj-line'  " current line: al il
 "Plug 'vim-scripts/BufOnly.vim'  " delete all buffers but current, :BufOnly
 "Plug 'scrooloose/syntastic'  " non-asynchronous syntax checking; prefer Ale @slow
 "Plug 'sjl/gundo.vim'  " visualize undo tree; requires Python 2.4+
-"Plug 'christoomey/vim-tmux-navigator'  " ctrl-hjkl through Vim and Tmux; added this functionality in my vimrc
 
 " -----------------------------------------------------------------------------
 call plug#end()  " initialize plugin system
@@ -156,40 +162,13 @@ call plug#end()  " initialize plugin system
 
 "- Individual Plugin Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- General utility functions
+"- General Utility Functions {{{2
 " -----------------------------------------------------------------------------
 command! PlugList echo g:plugs_order  " list loaded plugins
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Vim-Airline and Tmuxline
-" -----------------------------------------------------------------------------
-if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
-  "- Airline
-  let g:airline#extensions#tabline#enabled = 1  " 1 to display buffers at top
-  let g:airline#extensions#tabline#buffer_idx_mode = 1  " show buffer numbers
-  let g:airline_section_warning = ''
-  let g:airline_symbols_ascii = 1  " unicode doesn't work properly
-  "- Tmuxline
-  "- Start with :Tmuxline
-  "- See :h Tmuxline for settings
-  if exists('$TMUX')
-    "- Custom line: (grab these from ~/.tmux.conf
-    let g:tmuxline_preset = {
-        \'a'    : '#[fg=black][#[fg=colour56]#S,#[fg=colour4]#I,#[fg=colour6]#P#[fg=black]]',
-        \'b'    : '',
-        \'c'    : '',
-        \'win'  : '#[fg=colour4]#[fg=default] #I:#(echo `basename #{pane_current_path}`)',
-        \'cwin' : '#[fg=colour4]#F#[fg=default]#I:#(echo `basename #{pane_current_path}`)',
-        \'x'    : '',
-        \'y'    : '%Y-%m-%d %H:%M',
-        \'z'    : '',
-        \'options' : {'status-justify' : 'left'}}
-    let g:tmuxline_powerline_separators = 0
-  endif
-endif
-" -----------------------------------------------------------------------------
-
-"- Colorscheme
+"- Appearance {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-colorschemes"]')  " find plugin name in g:plugs_order
   "- Dark themes
@@ -205,15 +184,51 @@ if exists('g:plugs["vim-colorschemes"]')  " find plugin name in g:plugs_order
   " colorscheme pencil
   " let g:airline_theme='bubblegum'  " if autoload fails
 
-  " colorscheme nuvola
-  " let g:airline_theme='papercolor'  " if autoload fails
+  let s:tmuxtextcolor='colour231' " white text
+endif
 
-  " colorscheme summerfruit256
-  " let g:airline_theme='bubblegum'  " if autoload fails
+"- Vim-Airline
+if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
+  "- Airline
+  let g:airline#extensions#tabline#enabled = 1  " display buffers at top
+  let g:airline#extensions#tabline#buffer_nr_show = 1  " show buffer numbers
+  let g:airline_section_warning = ''  " hide warnings in Vim statusline
+  let g:airline_symbols_ascii = 1  " turn off unicode if not supported
+  "let g:airline_powerline_fonts = 1  " disable for pure terminal
+  "- Sections: | A | B |          C             X | Y | Z |  [additional...] |
+  let g:airline_section_y = ''  " don't display file encoding
+  let g:airline_section_z = '%-4( %c%)::%12( %l/%L %P%)'
+
+  "- Tmuxline
+  if exists('$TMUX')
+    "- Check themes and presets with tab-completion :Tmuxline [theme] [preset]
+    "- Custom line: (grab these from ~/.tmux.conf)
+    let g:tmuxline_preset = {
+        \'a'    : '#[fg=black][#[fg=colour93]#S#[fg=black]]',
+        \'b'    : '',
+        \'c'    : '',
+        \'win'  : '#[fg=colour123] #I#[fg=white]:#[fg=' . s:tmuxtextcolor
+            \ . ']#(echo `basename #{pane_current_path}`)',
+        \'cwin' : '#[fg=colour123]#F#I#[fg=white]:#[fg=' . s:tmuxtextcolor
+            \ . ']#(echo `basename #{pane_current_path}`)',
+        \'x'    : '',
+        \'y'    : '%Y-%m-%d %H:%M',
+        \'z'    : '',
+        \'options' : {'status-justify' : 'left'}
+        \}
+  endif
+  "- Override unicode symbols in Tmux statusline
+  let g:tmuxline_separators = {
+      \ 'left' : '',
+      \ 'left_alt': '>',
+      \ 'right' : '',
+      \ 'right_alt' : '<',
+      \ 'space' : ' '}
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Vim-Dispatch
+"- Vim-Dispatch {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-dispatch"]')  " find plugin name in g:plugs_order
   "- With no arguments :Dispatch runs b:dispatch, use: let b:dispatch='python %'
@@ -221,8 +236,9 @@ if exists('g:plugs["vim-dispatch"]')  " find plugin name in g:plugs_order
   nnoremap <F5> :Dispatch<CR>
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- EasyAlign
+"- EasyAlign {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-easy-align"]')  " find plugin name in g:plugs_order
   "- Two options: ga as align and <leader>ga as ga org.  gA as align
@@ -236,8 +252,9 @@ if exists('g:plugs["vim-easy-align"]')  " find plugin name in g:plugs_order
   let g:easy_align_ignore_groups = []  " align even if text is commented
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Easymotion
+"- Easymotion {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-easymotion"]')  " find plugin name in g:plugs_order
   let g:EasyMotion_do_mapping = 0  " Disable default mappings
@@ -247,15 +264,17 @@ if exists('g:plugs["vim-easymotion"]')  " find plugin name in g:plugs_order
   highlight EasyMotionTarget2Second ctermbg=none ctermfg=blue
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Vim-Foam
+"- Vim-Foam {{{2
 " -----------------------------------------------------------------------------
 if exists('user_openfoam_path')
   let &runtimepath = '~/.vim/plugged/vim-foam,' . &runtimepath
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Git-Gutter
+"- Git-Gutter {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-gitgutter"]')  " find plugin name in g:plugs_order
     "- Disable default mappings
@@ -265,15 +284,17 @@ if exists('g:plugs["vim-gitgutter"]')  " find plugin name in g:plugs_order
     nmap [c <Plug>(GitGutterPrevHunk)
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Undotree
+"- Undotree {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["undotree"]')  " find plugin name in g:plugs_order
   nnoremap <leader>gu :UndotreeToggle<CR>
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Markdown files and Pandoc
+"- Markdown files and Pandoc {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-pandoc"]')  " find plugin name in g:plugs_order
   let g:pandoc#keyboard#enabled_submodules = ["sections"]  " sections for [[ [] ][ ]] and viS vaS
@@ -283,8 +304,9 @@ if exists('g:plugs["vim-pandoc"]')  " find plugin name in g:plugs_order
   "let g:pandoc#modules#disabled += ["folding"]  " disable folding
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Mucomplete
+"- Mucomplete {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-mucomplete"]')  " find plugin name in g:plugs_order
   let g:mucomplete#enable_auto_at_startup = 1
@@ -302,8 +324,9 @@ if exists('g:plugs["vim-mucomplete"]')  " find plugin name in g:plugs_order
   endif
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Switch
+"- Switch {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["switch.vim"]')  " find plugin name in g:plugs_order
 "- Put upper case first " true enable
@@ -325,8 +348,9 @@ let g:switch_custom_definitions =
   \ ]
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Vim-Slime
+"- Vim-Slime {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-slime"]')  " find plugin name in g:plugs_order
   let g:slime_target = "tmux"
@@ -334,15 +358,17 @@ if exists('g:plugs["vim-slime"]')  " find plugin name in g:plugs_order
   "- Set target pane with :2.1 for session 2 pane 1
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Tagbar
+"- Tagbar {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["tagbar"]')  " find plugin name in g:plugs_order
   nmap <leader>t :Tagbar<CR>
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Ultisnips
+"- Ultisnips {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["ultisnip s"]')  " find plugin name in g:plugs_order
   "- Good for date, latex equations, everything else
@@ -352,8 +378,9 @@ if exists('g:plugs["ultisnip s"]')  " find plugin name in g:plugs_order
   let g:tex_flavor = "latex"
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Unite Options
+"- Unite Options {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["unite.vim"]')  " find plugin name in g:plugs_order
   "- Found these settings online
@@ -393,22 +420,25 @@ if exists('g:plugs["unite.vim"]')  " find plugin name in g:plugs_order
   autocmd FileType unite call s:unite_settings()
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Vimfiler
+"- Vimfiler {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vimfiler.vim"]')  " find plugin name in g:plugs_order
   nmap <leader>E :VimFilerExplorer<CR>
   let g:vimfiler_ignore_pattern = '^\%(\.git\|\.DS_Store\)$'
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Vimux
+"- Vimux {{{2
 " -----------------------------------------------------------------------------
  map <Leader>vp :VimuxPromptCommand<CR>
  map <Leader>vl :VimuxRunLastCommand<CR>
 " -----------------------------------------------------------------------------
+" }}}2
 
-"- Youcompleteme YCM
+"- Youcompleteme YCM {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["youcompleteme"]')  " find plugin name in g:plugs_order
   "let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
@@ -421,6 +451,7 @@ if exists('g:plugs["youcompleteme"]')  " find plugin name in g:plugs_order
   command! FoamYcmGen YcmGenerateConfig -verbose --preserve-environment --force
 endif
 " -----------------------------------------------------------------------------
+" }}}2
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1

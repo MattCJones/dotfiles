@@ -10,4 +10,3 @@ Author
 ------
 
 Matthew C. Jones <matt.c.jones.aoe@gmail.com>
-

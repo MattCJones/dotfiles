@@ -8,10 +8,6 @@ set cmdheight=1
 set nomodifiable " Only in version 6.0
 set readonly
 
-" My xterms have a navy-blue background, so I need this line too.
-set background=dark
-colorscheme spacegray " download -> .vim/colors/spacegrey.vim
-
 " Turn syntax on
 syntax enable
 
