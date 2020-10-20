@@ -187,14 +187,16 @@ if exists('g:plugs["vim-colorschemes"]')  " find plugin name in g:plugs_order
   let s:tmuxtextcolor='colour231' " white text
 endif
 
-"- Vim-Airline
+"- Vim-Airline and Tmuxline
 if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
   "- Airline
-  let g:airline#extensions#tabline#enabled = 1  " display buffers at top
-  let g:airline#extensions#tabline#buffer_nr_show = 1  " show buffer numbers
   let g:airline_section_warning = ''  " hide warnings in Vim statusline
   let g:airline_symbols_ascii = 1  " turn off unicode if not supported
   "let g:airline_powerline_fonts = 1  " disable for pure terminal
+  "- Tabline  TODO 2020-10-18: dig into theses options
+  let g:airline#extensions#tabline#enabled = 1  " display buffers at top
+  let g:airline#extensions#tabline#buffer_nr_show = 1  " show buffer numbers
+  let g:airline#extensions#tabline#show_splits = 0
   "- Sections: | A | B |          C             X | Y | Z |  [additional...] |
   let g:airline_section_y = ''  " don't display file encoding
   let g:airline_section_z = '%-4( %c%)::%12( %l/%L %P%)'

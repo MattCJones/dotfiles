@@ -15,6 +15,8 @@ let user_plugins_path = exists('user_plugins_path') ?
     \ user_plugins_path : "~/.vim/vimrc_plugins" 
 let user_openfoam_path = exists('user_openfoam_path') ?
     \ user_openfoam_path : "~/.vim/vimrc_openfoam"
+let user_extra_path = exists('user_extra_path') ?
+    \ user_extra_path : "~/.vim/vimrc_extra"
 
 "- Load default Vim configuration
 source $VIMRUNTIME/defaults.vim
@@ -27,9 +29,14 @@ if filereadable(expand(user_openfoam_path))
   execute "source " . user_openfoam_path
 endif
 
-"- Load user plugins (disable from command line with --cmd "let g:noplug=1"
+"- Load user plugins
 if filereadable(expand(user_plugins_path))
   execute "source " . user_plugins_path
+endif
+
+"- Load extra settings
+if filereadable(expand(user_extra_path))
+  execute "source " . user_extra_path
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
@@ -337,40 +344,32 @@ endif
 
 " Autocommands {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- All files
+"- File types
 augroup allFiles
   autocmd!
   " Auto-formatting of text, don't auto comment, see :help for specifics
   autocmd FileType * setlocal formatoptions=qlnj
+  "- Use literal tabs in a make file
+  autocmd FileType make setlocal noexpandtab
+"- Turn on folds for vim file-types; specify desired depth; disable annoying
+"- format options that are added when loading a Vim filetype
+  autocmd FileType vim setlocal foldmethod=marker foldlevel=1 
+      \ tabstop=2 shiftwidth=2 softtabstop=2
 augroup END
 
-"- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
-augroup fileExit
+"- Buffer events
+augroup bufferEvents
   autocmd!
+  "- Turn on syntax highlighting for otherwise bland file types
+  autocmd BufRead *.dat set filetype=cpp
+  "- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
   autocmd BufWritePost *
   \ execute "mksession! ~/.vim/lastSession.vim"
-augroup END
-
-"- Use literal tabs in a make file
-augroup makeFiles
-  autocmd!
-  autocmd FileType make setlocal noexpandtab
-augroup END
-
-"- Turn on spell check for certain file types; use i_ctrl-s to complete
-augroup enableSpellCheck
-  autocmd!
+  "- Turn on spell check for certain file types; use i_ctrl-s to complete
   autocmd BufRead *.tex,*.md,*.rst setlocal spell
     \ | syntax spell toplevel
 augroup END
 
-"- Turn on folds for vim file-types; specify desired depth; disable annoying
-"- format options that are added when loading a Vim filetype
-augroup vimFiles
-  autocmd!
-  autocmd FileType vim setlocal foldmethod=marker foldlevel=1 
-      \ tabstop=2 shiftwidth=2 softtabstop=2
-augroup END
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
