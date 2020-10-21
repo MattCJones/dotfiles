@@ -29,15 +29,16 @@ if filereadable(expand(user_openfoam_path))
   execute "source " . user_openfoam_path
 endif
 
+"- Load extra settings
+if filereadable(expand(user_extra_path))
+  execute "source " . user_extra_path
+endif
+
 "- Load user plugins
 if filereadable(expand(user_plugins_path))
   execute "source " . user_plugins_path
 endif
 
-"- Load extra settings
-if filereadable(expand(user_extra_path))
-  execute "source " . user_extra_path
-endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
@@ -47,6 +48,7 @@ endif
 set nobackup                    " no backup files
 set colorcolumn=80,100          " highlight columns
 set encoding=utf-8              " only use UTF-8 characters
+set noesckeys                   " fix startup replace mode bug when using WSL 
 set hidden                      " change buffers without saving
 set hlsearch                    " highlight matches
 set laststatus=2                " always show status line in last window
@@ -124,6 +126,8 @@ set cedit=<C-y>
 "- Quickly edit macros e.g. '"<register><Leader>m'; must match cedit key bind
 nnoremap <Leader>m :<C-u><C-r>= 'let @'. v:register .'
     \ = '. string(getreg(v:register))<CR><C-e>
+"- Save file as root
+cmap w!! :w !sudo tee > /dev/null %<CR>
 
 "- File explore
 nnoremap <Leader>e :Explore<CR>
@@ -188,8 +192,11 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-"- Save file as root
-cmap w!! :w !sudo tee > /dev/null %<CR>
+"- Set Ctrl-hjkl to move between windows
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 "- Quickfix and file searching
 "- Open quickfix window
@@ -311,6 +318,7 @@ command! -nargs=1 -complete=help Vh vertical help <args> | silent
 command! Vrc edit $MYVIMRC
 command! Vrcp edit ~/.vim/vimrc_plugins
 command! Vrco edit ~/.vim/vimrc_openfoam
+command! Vrce edit ~/.vim/vimrc_extra
 command! SVrc source $MYVIMRC
 command! Inst source $MYVIMRC | :PlugInstall
 command! Tco edit ~/.tmux.conf
@@ -321,7 +329,7 @@ command! Bma edit ~/.bash_matt
 "- Delete buffer but keep split intact
 command! Bd silent! execute "b#|bd#"
 "- Delete all buffers but current
-command! BufOnly silent! execute "%bd|e#|bd#"
+command! Bonly silent! execute "%bd|e#|bd#"
 "- Open new buffer in a full window
 command! New new | only
 "- Open scratch buffer in a full window
@@ -375,7 +383,7 @@ augroup END
 
 " Working with Tmux {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- Set Ctrl-hjkl to move between windows
+"- Set Ctrl-hjkl to move between windows when using Tmux
 if exists('$TMUX')
   "- Code snippet from:
   "- https://www.codeography.com/2013/06/19/navigating-vim-and-tmux-splits
@@ -396,67 +404,17 @@ if exists('$TMUX')
   nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
   nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
   nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
-else  " no Tmux
-  nnoremap <C-h> <C-w>h
-  nnoremap <C-j> <C-w>j
-  nnoremap <C-k> <C-w>k
-  nnoremap <C-l> <C-w>l
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
-" Tips and Tricks {{{1
+" Easter Eggs {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- Using Vim from the Command Line
-"------------------------------------------------------------------------------
-"- -c or +  for executing :commands with | inbetween commands
-"- -s       for executing normal-mode commands
-
-"- Delete all lines with foo in them from command line
-"-   vi -u NONE -N -c "v/foo/d|wq" fooAndBar.txt
-"-   vi -u NONE -N +"v/foo/d|wq" fooAndBar.txt
-"-   vi -u NONE -N -s normalCmdsScript.vim fooAndBar.txt
-"- In normalCmdsScript.vim
-"-   :v/foo/d<CR>:wq<CR>
-"- In fooAndBar.txt before modification
-"-   This line has a bar and a foo
-"-   This line only has a bar
-"-   This line only has a foo
-"- In fooAndBar.txt after modification
-"-   This line only has a bar
-"------------------------------------------------------------------------------
-
-"- In-File Tips
-"------------------------------------------------------------------------------
-"- Substitution:
-"- Use :cfdo %s/SEARCH/REPLACE/ge to modify all files in the quickfix list
-"-  See also :bufdo, :argdo, and :windo
-"- Use :args ## % to append current file to arglist
-"- Use & in normal model to repeat substitution
-"- Use \=str2float(submatch(1)) instead of \1 when using :s with math
-
-"- Scripting with Python within Vim:
-"- Remove comment tag on the Python command and type :.!python3
-"- Or highlight line(s) then !python3
-"- for i, x in enumerate("ABC"): print("Person %i is %s"%(i,x))
-
-"- Source Vimscript code without sourcing entire file: yank code and :@0
-
-"- View current vim environement:
-"-   https://vim.fandom.com/wiki/Displaying_the_current_Vim_environment
-"- View message outputs in separate buffer:
-"-   :redir @r | let g:
-"-   :new | put r | redir END
-"------------------------------------------------------------------------------
-
-"- Easter eggs
-"------------------------------------------------------------------------------
 "- :Ni!
 "- :h 42
 "- :h UserGettingBored
 "- :h holy-grail
 "- :smile
 "- :h help!
-"------------------------------------------------------------------------------
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
