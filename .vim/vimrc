@@ -15,8 +15,8 @@ let user_plugins_path = exists('user_plugins_path') ?
     \ user_plugins_path : "~/.vim/vimrc_plugins" 
 let user_openfoam_path = exists('user_openfoam_path') ?
     \ user_openfoam_path : "~/.vim/vimrc_openfoam"
-let user_extra_path = exists('user_extra_path') ?
-    \ user_extra_path : "~/.vim/vimrc_extra"
+let user_local_path = exists('user_local_path') ?
+    \ user_local_path : "~/.vim/vimrc_local"
 
 "- Load default Vim configuration
 source $VIMRUNTIME/defaults.vim
@@ -29,9 +29,9 @@ if filereadable(expand(user_openfoam_path))
   execute "source " . user_openfoam_path
 endif
 
-"- Load extra settings
-if filereadable(expand(user_extra_path))
-  execute "source " . user_extra_path
+"- Load local settings
+if filereadable(expand(user_local_path))
+  execute "source " . user_local_path
 endif
 
 "- Load user plugins
@@ -318,7 +318,7 @@ command! -nargs=1 -complete=help Vh vertical help <args> | silent
 command! Vrc edit $MYVIMRC
 command! Vrcp edit ~/.vim/vimrc_plugins
 command! Vrco edit ~/.vim/vimrc_openfoam
-command! Vrce edit ~/.vim/vimrc_extra
+command! Vrcl edit ~/.vim/vimrc_local
 command! SVrc source $MYVIMRC
 command! Inst source $MYVIMRC | :PlugInstall
 command! Tco edit ~/.tmux.conf
@@ -359,8 +359,8 @@ augroup allFiles
   autocmd FileType * setlocal formatoptions=qlnj
   "- Use literal tabs in a make file
   autocmd FileType make setlocal noexpandtab
-"- Turn on folds for vim file-types; specify desired depth; disable annoying
-"- format options that are added when loading a Vim filetype
+  "- Turn on folds for vim file-types; specify desired depth; disable annoying
+  "- format options that are added when loading a Vim filetype
   autocmd FileType vim setlocal foldmethod=marker foldlevel=1 
       \ tabstop=2 shiftwidth=2 softtabstop=2
 augroup END
@@ -370,6 +370,7 @@ augroup bufferEvents
   autocmd!
   "- Turn on syntax highlighting for otherwise bland file types
   autocmd BufRead *.dat set filetype=cpp
+  autocmd BufRead *.nml set filetype=fortran
   "- Save last session on every write, use 'vim -S ~/.vim/lastSession.vim'
   autocmd BufWritePost *
   \ execute "mksession! ~/.vim/lastSession.vim"

@@ -80,7 +80,7 @@ alias vrc="vi ~/.vim/vimrc"
 alias vrcp="vi ~/.vim/vimrc_plugins"
 alias vrcm="vi ~/.vim/vimrc_more"
 alias vrco="vi ~/.vim/vimrc_openfoam"
-alias vrce="vi ~/.vim/vimrc_extra"
+alias vrce="vi ~/.vim/vimrc_local"
 alias vimProfile="vim --cmd 'profile start vimrc_profile' --cmd 'profile! file ~/.vim/vimrc'"
 alias vimStartupTime="vim --startuptime /tmp/startup.log +q && vim /tmp/startup.log"
 alias vis="vim -u NONE -N -s"
@@ -108,6 +108,7 @@ alias brc="vi ~/.bashrc"
 alias bpr="vi ~/.bash_profile"
 alias bal="vi ~/.bash_aliases"
 alias bma="vi ~/.bash_matt"
+alias bml="vi ~/.bash_local"
 alias zrc="vi ~/.zshrc"
 alias frc="vi ~/.config/fish/config.fish"
 alias sbrc="source ~/.bashrc"
@@ -268,6 +269,9 @@ if [ -n "$BASH_VERSION" ]; then  # if running bash
 
     #- Use extended globs
     shopt -s extglob  # use ?(list), *(list), +(list), @(list) !(list)
+
+    #- Properly expand $VAR/path
+    shopt -s direxpand
 
     #- Disable Ctrl-s stopping terminal
     stty -ixon
