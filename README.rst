@@ -9,4 +9,4 @@ Configuration (dot) files to be used with a Unix shell.
 Author
 ------
 
-Matthew C. Jones <matt.c.jones.aoe@gmail.com>
+Matthew C. Jones matt.c.jones.aoe@gmail.com

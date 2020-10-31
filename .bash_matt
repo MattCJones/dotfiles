@@ -9,7 +9,7 @@ export WHOME="/mnt/c/Users/$USER"
 ###############################
 #- Bash utilities
 alias myip="ifconfig 2>/dev/null | grep 'inet .*\([0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9]*\)' | xargs | cut -d ' ' -f2"
-alias me="echo '$(id -un)@$(hostname) $(myip)';"
+alias ls="ls --color"
 alias ld="ls -d */"
 alias lda="ls -d -a */"
 alias ll="ls -altF"
@@ -21,8 +21,9 @@ alias hist="history"
 alias ag="ag --color-path '0;35' --color-line-number '0;32' --color-match '1;31'"
 alias grep="grep --color --exclude-dir='.git'"
 alias agrep="alias | grep"
+alias egrep="env | grep"
 alias sgrep="set | grep"
-alias asgrep="_asgrep"
+alias aesgrep="_aesgrep"
 alias md="mkdir"
 alias rd="rmdir"
 alias cpr="cp -r"
@@ -108,13 +109,14 @@ alias brc="vi ~/.bashrc"
 alias bpr="vi ~/.bash_profile"
 alias bal="vi ~/.bash_aliases"
 alias bma="vi ~/.bash_matt"
-alias bml="vi ~/.bash_local"
+alias blo="vi ~/.bash_local"
 alias zrc="vi ~/.zshrc"
 alias frc="vi ~/.config/fish/config.fish"
 alias sbrc="source ~/.bashrc"
 alias sbpr="source ~/.bash_profile"
 alias sbal="source ~/.bash_aliases"
 alias sbma="source ~/.bash_matt"
+alias sblo="source ~/.bash_local"
 alias szrc="source ~/.zshrc"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
@@ -135,9 +137,10 @@ function showFullPath {
     fi
 }
 
-function _asgrep {
+function _aesgrep {
     #- Search alias and set
     alias | grep $1
+    env | grep $1
     set | grep $1
     type $1
 }
@@ -271,7 +274,7 @@ if [ -n "$BASH_VERSION" ]; then  # if running bash
     shopt -s extglob  # use ?(list), *(list), +(list), @(list) !(list)
 
     #- Properly expand $VAR/path
-    shopt -s direxpand
+    #shopt -s direxpand
 
     #- Disable Ctrl-s stopping terminal
     stty -ixon

@@ -28,7 +28,7 @@ Plug 'flazz/vim-colorschemes'  " color schemes
 Plug 'kshenoy/vim-signature'  " put marks in the sign column
 Plug 'mhinz/vim-startify'  " better start screen, list mru files
 "- Pandoc integration for pdf to md; syntax highlighting for markdown etc.
-Plug 'vim-pandoc/vim-pandoc' | Plug 'vim-pandoc/vim-pandoc-syntax'
+" Plug 'vim-pandoc/vim-pandoc' | Plug 'vim-pandoc/vim-pandoc-syntax'
 
 "- Editing
 Plug 'tpope/vim-abolish'  " ':%S/foo{,s}/bar{,s}/g'; crs (coerce to snake_case)
@@ -47,26 +47,6 @@ Plug 'tpope/vim-eunuch'  " Unix commands in Vim s/a :Find, :Rename :Chmod etc.
 Plug 'bruno-/vim-husk'  " Emacs/Bash movement in cmdline (ctrl-f, ctrl-b, etc.)
 Plug 'tpope/vim-scriptease'  " g== and g=<movement> to eval text and much more
 Plug 'tpope/vim-unimpaired'  " [e [<Space> ., movement ([q [f [b ...) mappings (yos )
-
-"- Text completion
-Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'  " customizable snippets
-"- Youcompleteme - unified tab completion; requires external build @slow
-"Plug 'valloric/youcompleteme' | Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}  " DEP: Clang
-"- Consider mucomplete (lightweight compared to Youcompleteme)
-" Plug 'lifepillar/vim-mucomplete'  " minimal completion engine
-" Plug 'davidhalter/jedi-vim'  " use with vim-mucomplete
-"- Consider deoplete
-"Plug 'Shougo/deoplete.nvim'
-"Plug 'roxma/nvim-yarp'
-"Plug 'roxma/vim-hug-neovim-rpc'
-"Plug 'deoplete-plugins/deoplete-jedi'  " DEP: pip3 install --user jedi
-
-"- Syntax checking
-Plug 'w0rp/ale'  " asynchronous syntax checking and linting, :ALEToggle
-"Plug 'sheerun/vim-polyglot'  " syntax colors for many languages, messes up airfoil files
-"Plug 'jbmorgado/vim-pine-script'  " edit TradingView Pinee script
-"Plug 'effi/vim-OpenFoam-syntax'  " Vim syntax - opens extra buffers :(;  or use Tobias's; manual install
-"Plug 'lervag/vim-foam'  " doesn't work very well; good to just manually set up .vim/syntax
 
 "- Git tools
 Plug 'tpope/vim-fugitive'  " :Gdiff
@@ -94,22 +74,25 @@ Plug 'tsukkee/unite-tag'  " look through tags
 Plug 'Shougo/vimfiler.vim'  " replacement for NERD-tree
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " asynchronous
 
-"" Tmux plugins
-Plug 'wellle/tmux-complete.vim'  " ctrl-x_ctrl-u complete anywhere from Tmux
-Plug 'tpope/vim-tbone'  " :Tmux to call any Tmux command with tab completion
-Plug 'edkolev/tmuxline.vim'  " airline bar in Tmux
-"- Send output to Tmux
-Plug 'jpalardy/vim-slime'  " send output to Tmux
-"- Vimux <leader>vp <leader>vl
-Plug 'benmills/vimux'  " interact with Tmux
-Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
-"Plug 'jgors/vimux-ipy'   " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
-"Plug 'ivanov/vim-ipython'  " highest rated, more advanced vim-cellmode, overwrites ctrl-s
-"Plug 'julienr/vim-cellmode'  " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
-"- Don't like:
-"Plug 'roxma/vim-tmux-clipboard'  " seamless clipboard integration to " register
-"Plug 'tmux-plugins/vim-tmux-focus-events'  " use with vim-tmux-clipboard
-"Plug 'christoomey/vim-tmux-navigator'  " ctrl-hjkl through Vim and Tmux; added this functionality in my vimrc
+"- Syntax checking
+Plug 'w0rp/ale'  " asynchronous syntax checking and linting, :ALEToggle
+"Plug 'sheerun/vim-polyglot'  " syntax colors for many languages, messes up airfoil files
+"Plug 'jbmorgado/vim-pine-script'  " edit TradingView Pinee script
+"Plug 'effi/vim-OpenFoam-syntax'  " Vim syntax - opens extra buffers :(;  or use Tobias's; manual install
+Plug 'lervag/vim-foam'  " doesn't work very well; good to just manually set up .vim/syntax
+
+"- Text completion
+Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'  " customizable snippets
+"- Youcompleteme - unified tab completion; requires external build @slow
+"Plug 'valloric/youcompleteme' | Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}  " DEP: Clang
+"- Consider mucomplete (lightweight compared to Youcompleteme)
+Plug 'lifepillar/vim-mucomplete'  " minimal completion engine
+Plug 'davidhalter/jedi-vim'  " use with vim-mucomplete
+"- Consider deoplete
+"Plug 'Shougo/deoplete.nvim'
+"Plug 'roxma/nvim-yarp'
+"Plug 'roxma/vim-hug-neovim-rpc'
+"Plug 'deoplete-plugins/deoplete-jedi'  " DEP: pip3 install --user jedi
 
 "- Text objects: https://github.com/kana/vim-textobj-user/wiki
 Plug 'wellle/targets.vim'  " ,.;:+-=~_*#/|\&$ (one key faster than 'between')
@@ -127,7 +110,25 @@ Plug 'kana/vim-textobj-line'  " current line: al il
 "Plug 'coderifous/textobj-word-column.vim'  " word column: ac ic aC iC (CONFLICT w/ comment)
 "Plug 'Julian/vim-textobj-variable-segment'  " between camelCase or snake_case: av iv
 
+"- Tmux plugins
+Plug 'wellle/tmux-complete.vim'  " ctrl-x_ctrl-u complete anywhere from Tmux
+Plug 'tpope/vim-tbone'  " :Tmux to call any Tmux command with tab completion
+Plug 'edkolev/tmuxline.vim'  " airline bar in Tmux
+"- Send output to Tmux
+Plug 'jpalardy/vim-slime'  " send output to Tmux
+"- Vimux <leader>vp <leader>vl
+Plug 'benmills/vimux'  " interact with Tmux
+Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
+"Plug 'jgors/vimux-ipy'   " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
+"Plug 'ivanov/vim-ipython'  " highest rated, more advanced vim-cellmode, overwrites ctrl-s
+"Plug 'julienr/vim-cellmode'  " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
+"- Don't like:
+"Plug 'roxma/vim-tmux-clipboard'  " seamless clipboard integration to " register
+"Plug 'tmux-plugins/vim-tmux-focus-events'  " use with vim-tmux-clipboard
+"Plug 'christoomey/vim-tmux-navigator'  " ctrl-hjkl through Vim and Tmux; added this functionality in my vimrc
+
 "- Newly added
+Plug 'MattCJones/vim-foam-programmer'
 
 "- Consider
 " Plug 'thinca/vim-quickrun' - run commands on file quickly, :QuickRun -python
@@ -168,7 +169,7 @@ command! PlugList echo g:plugs_order  " list loaded plugins
 " -----------------------------------------------------------------------------
 " }}}2
 
-"- Appearance {{{2
+"- Appearance: Vim-Airline and Tmuxline{{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-colorschemes"]')  " find plugin name in g:plugs_order
   "- Dark themes
@@ -192,8 +193,6 @@ if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
   "- Airline
   let g:airline_section_warning = ''  " hide warnings in Vim statusline
   let g:airline_symbols_ascii = 1  " turn off unicode if not supported
-  "let g:airline_powerline_fonts = 1  " disable for pure terminal
-  "- Tabline  TODO 2020-10-18: dig into theses options
   let g:airline#extensions#tabline#enabled = 1  " display buffers at top
   let g:airline#extensions#tabline#buffer_nr_show = 1  " show buffer numbers
   let g:airline#extensions#tabline#show_splits = 0
@@ -206,7 +205,7 @@ if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
     "- Check themes and presets with tab-completion :Tmuxline [theme] [preset]
     "- Custom line: (grab these from ~/.tmux.conf)
     let g:tmuxline_preset = {
-        \'a'    : '#[fg=black][#[fg=colour93]#S#[fg=black]]',
+        \'a'    : '#[fg=black]#[fg=colour93]#S#[fg=black]',
         \'b'    : '',
         \'c'    : '',
         \'win'  : '#[fg=colour123] #I#[fg=white]:#[fg=' . s:tmuxtextcolor
@@ -270,6 +269,9 @@ endif
 
 "- Vim-Foam {{{2
 " -----------------------------------------------------------------------------
+if exists('g:plugs["vim-foam-programmer"]')  " find plugin name in g:plugs_order
+  let g:foam#programmer#syntax = v:true
+endif
 if exists('user_openfoam_path')
   let &runtimepath = '~/.vim/plugged/vim-foam,' . &runtimepath
 endif
@@ -286,6 +288,15 @@ if exists('g:plugs["vim-gitgutter"]')  " find plugin name in g:plugs_order
     nmap [c <Plug>(GitGutterPrevHunk)
 endif
 " -----------------------------------------------------------------------------
+" }}}2
+
+"- Jedi-Vim {{{2
+" -----------------------------------------------------------------------------
+    "let g:jedi#completions_command = '<C-N>'
+    let g:jedi#goto_command = '<Leader>jd'
+    let g:jedi#goto_stubs_command = '<Leader>js'
+    let g:jedi#rename_command = '<Leader>jr'
+    let g:jedi#goto_usages_command = '<Leader>jn'
 " }}}2
 
 "- Undotree {{{2
@@ -313,9 +324,16 @@ endif
 if exists('g:plugs["vim-mucomplete"]')  " find plugin name in g:plugs_order
   let g:mucomplete#enable_auto_at_startup = 1
   let g:mucomplete#buffer_relative_paths = 1
+  "- Remove uspl from complete chain to remove bug
+  let g:mucomplete#chains = {
+      \ 'default': ['path', 'omni', 'keyn', 'dict'],
+      \ 'vim': ['path', 'cmd', 'keyn'],
+      \ }
   set shortmess+=c  " shut off completion messages
   set completeopt-=preview
   set completeopt+=menuone,longest,noinsert,noselect
+  "- Make <Enter> always insert a newline
+  inoremap <expr> <CR> pumvisible() ? "<C-y><CR>" : "<CR>"
   "- Setup SyntaxComplete for every filetype that does not already have a
   "- language specific OMNI script:
   if has("autocmd") && exists("+omnifunc")
@@ -372,7 +390,7 @@ endif
 
 "- Ultisnips {{{2
 " -----------------------------------------------------------------------------
-if exists('g:plugs["ultisnip s"]')  " find plugin name in g:plugs_order
+if exists('g:plugs["ultisnips"]')  " find plugin name in g:plugs_order
   "- Good for date, latex equations, everything else
   "- Ultisnips working with YCM
   let g:UltiSnipsExpandTrigger="<c-j>"

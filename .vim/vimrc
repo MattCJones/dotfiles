@@ -13,8 +13,6 @@
 "- Allow user input of file paths, e.g., vi --cmd="let user_plugins_path=''"
 let user_plugins_path = exists('user_plugins_path') ? 
     \ user_plugins_path : "~/.vim/vimrc_plugins" 
-let user_openfoam_path = exists('user_openfoam_path') ?
-    \ user_openfoam_path : "~/.vim/vimrc_openfoam"
 let user_local_path = exists('user_local_path') ?
     \ user_local_path : "~/.vim/vimrc_local"
 
@@ -23,11 +21,6 @@ source $VIMRUNTIME/defaults.vim
 
 "- Load built-in plugins
 silent! packadd! cfilter  " 'Cfilter /PAT/' to filter quickfix list
-
-"- Load user OpenFOAM settings
-if filereadable(expand(user_openfoam_path))
-  execute "source " . user_openfoam_path
-endif
 
 "- Load local settings
 if filereadable(expand(user_local_path))
@@ -46,6 +39,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "- General
 set nobackup                    " no backup files
+set belloff=all                 " no bell chimes while editing
 set colorcolumn=80,100          " highlight columns
 set encoding=utf-8              " only use UTF-8 characters
 set noesckeys                   " fix startup replace mode bug when using WSL 
@@ -99,7 +93,8 @@ map <Space> <Leader>
 "- Buffer movement
 nnoremap <C-n> :bn<CR>
 nnoremap <C-p> :bp<CR>
-nnoremap <Leader>d :b#<CR>:bd#<CR>
+nnoremap <Leader>d :bd<CR>
+nnoremap <Leader>D :Bd<CR>
 
 "- Rebind arrow keys to resize splits
 nnoremap <Left> 1<C-w><
@@ -145,7 +140,7 @@ nnoremap yol :setlocal list!<CR>
 nnoremap yon :setlocal number! relativenumber! signcolumn=no<CR>
 
 "- Toggle scrolloff to maximum so that screen moves with j and k (like Ctrl-z)
-nnoremap yoz :let &scrolloff=999-&scrolloff<CR>
+nnoremap yoz :let &scrolloff=999-&scrolloff<CR>M
 
 "- Toggle paste
 nnoremap yop :set paste!<CR>:set paste?<CR>
@@ -317,7 +312,6 @@ command! -nargs=1 -complete=help Vh vertical help <args> | silent
 "- Aliases to open commonly-used files
 command! Vrc edit $MYVIMRC
 command! Vrcp edit ~/.vim/vimrc_plugins
-command! Vrco edit ~/.vim/vimrc_openfoam
 command! Vrcl edit ~/.vim/vimrc_local
 command! SVrc source $MYVIMRC
 command! Inst source $MYVIMRC | :PlugInstall
@@ -326,6 +320,7 @@ command! Brc edit ~/.bashrc
 command! Bpr edit ~/.bash_profile
 command! Bal edit ~/.bash_aliases
 command! Bma edit ~/.bash_matt
+command! Blo edit ~/.bash_local
 "- Delete buffer but keep split intact
 command! Bd silent! execute "b#|bd#"
 "- Delete all buffers but current
@@ -346,6 +341,7 @@ command! Ctags !ctags -R .
 if v:version >= 802
   "- Remap <C-w><Esc> to change terminal insert to normal mode 
   tnoremap <C-w><Esc> <C-w>N
+  tnoremap <C-w><C-w> <C-w>.
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
