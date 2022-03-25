@@ -270,6 +270,7 @@ nnoremap g:: :call SourceVimscript("currentline")<cr>
 ab date>> <C-r>=strftime('%Y-%m-%d')<CR>
 ab time>> <C-r>=strftime('%H:%M')<CR>
 iab TODO>> TODO <C-r>=strftime('%F')<CR>
+iab IMPL>> IMPL <C-r>=strftime('%F')<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 

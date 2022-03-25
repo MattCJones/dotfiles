@@ -1,0 +1,15 @@
+archive
+TODO*
+tags
+temp
+
+.bash_colors
+.bash_greetings
+.bash_matt_private
+.dircolors
+.gitconfig
+.latexmkrc
+.zshrc
+
+.vim/after
+.vim/lastSession.vim

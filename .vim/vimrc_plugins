@@ -16,6 +16,7 @@
 
 "- Vim-Plug List {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- See https://github.com/junegunn/vim-plug
 "- Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
@@ -132,6 +133,7 @@ Plug 'MattCJones/vim-foam-programmer'
 
 "- Consider
 " Plug 'thinca/vim-quickrun' - run commands on file quickly, :QuickRun -python
+" Plug 'skywind3000/vim-quickui'
 "- Gnupg.vim - plugin allows easy work with encrypted text files
 
 "- Rarely used
@@ -142,7 +144,7 @@ Plug 'MattCJones/vim-foam-programmer'
 "Plug 'terryma/vim-multiple-cursors'  " multiple cursors, unnecessary but fun
 "Plug 'scrooloose/nerdtree'  " file explorer, buggy, don't like, breaks defaults
 "Plug 'justinmk/vim-sneak'  " breaks default capabilities
-"Plug 'zef/vim-cycle'  " toggle on/off, true/false, etc w/ CTRL-a (inferior to switch)
+"Plug 'zef/vim-cycle'  " gs to toggle on/off, true/false, etc w/ CTRL-a (inferior to switch)
 "Plug 'unblevable/quick-scope'  " highlight f F t T nearest letters; fun plugin
 "Plug 'vimwiki'  " create notes/wiki pages
 "Plug 'itchyny/lightline.vim'  " replacement for vim-airline?
@@ -393,7 +395,7 @@ endif
 if exists('g:plugs["ultisnips"]')  " find plugin name in g:plugs_order
   "- Good for date, latex equations, everything else
   "- Ultisnips working with YCM
-  let g:UltiSnipsExpandTrigger="<c-j>"
+  let g:UltiSnipsExpandTrigger="<C-j>"
   "- Ultisnips not recognizing .tex files
   let g:tex_flavor = "latex"
 endif

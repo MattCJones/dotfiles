@@ -90,16 +90,24 @@ alias vic="vimCommandFromFile"  # run vim command from a file
 alias vmore="vim -u ~/.vim/vimrc_more"
 alias vmo="vmore"
 alias viToHTML='vi -c TOhtml -c wqa'
+alias vgif='vimgif'
 #- Latexmk
 alias lmk="latexmk -pdf -pvc -lualatex"
 #- Git
+alias g="git status"
 alias gs="git status"
 alias gif="git diff"
-alias gifc="git diff --cached"
+alias gifc="git diff --cached"  # cached for commit
+alias giff="git diff --cached"  # cached for commit
 alias gad="git add"
 alias gca="git commit --amend -C HEAD"
-alias grm="_grm"
-alias grmr="_grmr"
+alias gcap="git commit --amend -C HEAD; git push -f"
+alias gammend="git commit --amend -C HEAD"
+alias grm="gitRemove"
+alias grmr="gitRemoveRecursive"
+alias gf="gitFiles"
+alias gfc="gitFilesCached"
+alias gff="gitFilesCached"
 #- Other
 alias pyProfile="python -m cProfile"  # profile Python code
 
@@ -120,7 +128,6 @@ alias sblo="source ~/.bash_local"
 alias szrc="source ~/.zshrc"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
-alias sourceFoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
 alias todo="vi ~/TODO.md"
 
 ################################
@@ -218,7 +225,7 @@ function sbatchAllInDir {
     for dir in $inDir/*/; do  # loop through base level subdirectories
         cd $dir
         if [ -f "$runFile" ]; then
-            cmd = "sbatch $runFile"
+            cmd="sbatch $runFile"
             echo && echo $cmd && eval $cmd
         fi
         cd - > /dev/null
@@ -230,13 +237,13 @@ function tarBallCompress {
     tar -cvzf $1.tgz $1
 }
 
-function _grm {
+function gitRemove {
     #- Remove and git remove
     rm $1
     git rm $1
 }
 
-function _grmr {
+function gitRemoveRecursive {
     #- Remove and git remove
     rm -r $1
     git rm -r $1
@@ -255,7 +262,58 @@ function vman {
 }
 
 #- Edit changed files with Vim
-function vigif { vi `git diff --name-only | uniq | xargs`; }
+function gitFiles { git diff --name-only | uniq; }
+function gitFilesCached { git diff --cached --name-only | uniq; }
+
+#- Create a new directory and enter it
+mkd() {
+        mkdir -p "$@"
+        cd "$@" || exit
+}
+
+#- Extract from compressed file
+extract() {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xvjf $1                  ;;
+            *.tar.gz)    tar xvzf $1                  ;;
+            *.bz2)       bunzip2 $1                   ;;
+            *.rar)       unrar x $1                   ;;
+            *.gz)        gunzip $1                    ;;
+            *.tar)       tar xvf $1                   ;;
+            *.tbz2)      tar xvjf $1                  ;;
+            *.tgz)       tar xvzf $1                  ;;
+            *.zip)       unzip $1                     ;;
+            *.Z)         uncompress $1                ;;
+            *.7z)        7z x $1                      ;;
+            *)           echo "can't extract '$1'..." ;;
+        esac
+    else
+        echo "'$1' is not a valid file!"
+    fi
+}
+
+#- Finds x newest files recursively in a directory - only non-hidden stuff
+newest() {
+    # $1 - number of files to find
+    if [ $# -eq 1 ]; then
+        N=$1
+    else
+        N=5
+    fi
+    find . -type f \( ! -regex '.*/\..*' \) -print0 | xargs -0 stat -c "%Y:%n"\
+        | sort -n| tail -n "$N" | cut -d ':' -f2-
+}
+
+#- Basic calculations, e.g. calc 2/3-1.2, optional significant figures as $2
+calc() {
+    if [ -z "$2" ]; then
+        scale_=5  # default significant figures
+    else
+        scale_=$2
+    fi
+    echo "scale=$scale_;$1" | bc;
+}
 
 ###############################
 # Settings
@@ -274,9 +332,18 @@ if [ -n "$BASH_VERSION" ]; then  # if running bash
     shopt -s extglob  # use ?(list), *(list), +(list), @(list) !(list)
 
     #- Properly expand $VAR/path
-    #shopt -s direxpand
+    # shopt -s direxpand
 
     #- Disable Ctrl-s stopping terminal
     stty -ixon
+
+    #- Make 'less' and 'man' use colors
+    export LESS_TERMCAP_mb=$'\e[1;32m'
+    export LESS_TERMCAP_md=$'\e[1;32m'
+    export LESS_TERMCAP_me=$'\e[0m'
+    export LESS_TERMCAP_se=$'\e[0m'
+    export LESS_TERMCAP_so=$'\e[01;33m'
+    export LESS_TERMCAP_ue=$'\e[0m'
+    export LESS_TERMCAP_us=$'\e[1;4;31m'
 
 fi
