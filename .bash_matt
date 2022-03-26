@@ -12,7 +12,7 @@ alias myip="ifconfig 2>/dev/null | grep 'inet .*\([0-9][0-9][0-9]\.[0-9][0-9][0-
 alias ls="ls --color"
 alias ld="ls -d */"
 alias lda="ls -d -a */"
-alias ll="ls -altF"
+alias ll="ls -AltF"
 alias la="ls -A"
 alias l="ls -CF"
 alias lsp="showFullPath"  # show pull path
@@ -66,8 +66,8 @@ alias touchFoam="touch ${PWD##*/}.foam"
 #- Paraview
 alias pv="touch foam.foam && paraview --data=foam.foam"
 #- Ipython
-alias ipy="ipython --pylab --profile=matt"
-alias ipy3="ipython3 --pylab --profile=matt"
+alias ipy="ipython --pylab"
+alias ipy3="ipython3 --pylab"
 #- Tarballing
 alias tarx="tar -xvzf"
 alias tarc="tarBallCompress"

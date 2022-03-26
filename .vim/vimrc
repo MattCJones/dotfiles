@@ -178,8 +178,8 @@ nnoremap csj mmo<Esc>`m:delmarks m<CR>
 
 "- Vim RC commands
 nnoremap <Leader>v :edit $MYVIMRC<CR>
-nnoremap <Leader>r :source %<CR>:edit %<CR>
-nnoremap <Leader>R :source $MYVIMRC<CR>:edit %<CR>
+nnoremap <Leader>s :source %<CR>:edit %<CR>
+nnoremap <Leader>S :source $MYVIMRC<CR>:edit %<CR>
 
 "- Vertical movement - move down in same column based on editor lines
 nnoremap j gj

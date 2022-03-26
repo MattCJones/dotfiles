@@ -78,7 +78,7 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " asynchronous
 "- Syntax checking
 Plug 'w0rp/ale'  " asynchronous syntax checking and linting, :ALEToggle
 "Plug 'sheerun/vim-polyglot'  " syntax colors for many languages, messes up airfoil files
-"Plug 'jbmorgado/vim-pine-script'  " edit TradingView Pinee script
+"Plug 'jbmorgado/vim-pine-script'  " edit TradingView Pine script
 "Plug 'effi/vim-OpenFoam-syntax'  " Vim syntax - opens extra buffers :(;  or use Tobias's; manual install
 Plug 'lervag/vim-foam'  " doesn't work very well; good to just manually set up .vim/syntax
 
@@ -86,14 +86,14 @@ Plug 'lervag/vim-foam'  " doesn't work very well; good to just manually set up .
 Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'  " customizable snippets
 "- Youcompleteme - unified tab completion; requires external build @slow
 "Plug 'valloric/youcompleteme' | Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}  " DEP: Clang
-"- Consider mucomplete (lightweight compared to Youcompleteme)
-Plug 'lifepillar/vim-mucomplete'  " minimal completion engine
-Plug 'davidhalter/jedi-vim'  " use with vim-mucomplete
+""- Consider mucomplete (lightweight compared to Youcompleteme)
+"Plug 'lifepillar/vim-mucomplete'  " minimal completion engine
+"Plug 'davidhalter/jedi-vim'  " use with vim-mucomplete
 "- Consider deoplete
-"Plug 'Shougo/deoplete.nvim'
-"Plug 'roxma/nvim-yarp'
-"Plug 'roxma/vim-hug-neovim-rpc'
-"Plug 'deoplete-plugins/deoplete-jedi'  " DEP: pip3 install --user jedi
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'deoplete-plugins/deoplete-jedi'  " DEP: pip3 install --user jedi
 
 "- Text objects: https://github.com/kana/vim-textobj-user/wiki
 Plug 'wellle/targets.vim'  " ,.;:+-=~_*#/|\&$ (one key faster than 'between')
@@ -227,6 +227,14 @@ if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
       \ 'right' : '',
       \ 'right_alt' : '<',
       \ 'space' : ' '}
+endif
+" -----------------------------------------------------------------------------
+" }}}2
+
+"- Deoplete {{{2
+" -----------------------------------------------------------------------------
+if exists('g:plugs["deoplete.nvm"]')  " find plugin name in g:plugs_order
+  let g:deoplete#enable_at_startup = 1
 endif
 " -----------------------------------------------------------------------------
 " }}}2
