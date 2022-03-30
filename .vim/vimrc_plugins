@@ -24,7 +24,7 @@ call plug#begin('~/.vim/plugged')
 " ----------------------------------------------------------
 "- Appearance
 Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'  " status bar
-Plug 'chrisbra/Colorizer'  " :ColorToggle toggle colors #ff0000 red @slow
+"Plug 'chrisbra/Colorizer'  " :ColorToggle toggle colors #ff0000 red @slow
 Plug 'flazz/vim-colorschemes'  " color schemes
 Plug 'kshenoy/vim-signature'  " put marks in the sign column
 Plug 'mhinz/vim-startify'  " better start screen, list mru files
@@ -235,6 +235,10 @@ endif
 " -----------------------------------------------------------------------------
 if exists('g:plugs["deoplete.nvm"]')  " find plugin name in g:plugs_order
   let g:deoplete#enable_at_startup = 1
+  call deoplete#custom#option({
+  \ 'auto_complete_delay': 20,
+  \ 'smart_case': v:true,
+  \ })
 endif
 " -----------------------------------------------------------------------------
 " }}}2

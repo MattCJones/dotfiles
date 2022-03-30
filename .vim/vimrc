@@ -164,8 +164,6 @@ nnoremap yox :set cursorline!<CR>:set cursorcolumn!<CR>
 "- Utility command for substitution
 nnoremap <Leader>; :%s///ge<Left><Left><Left>
 vnoremap <Leader>; :s///ge<Left><Left><Left>
-nmap g: <Leader>;
-vmap g: <Leader>;
 
 "- Utility commands to input spaces
 "- Insert spaces around character
@@ -237,7 +235,8 @@ vnoremap <silent> # :<C-u>
   \ escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \ gVzv:call setreg('"', old_reg, old_regtype)<CR>
 
-" Source Vimscript without sourcing entire file; or yank and :@<reg>
+" Source selected Vimscript text without sourcing entire file with g: or yank
+" and :@<reg>
 function! SourceVimscript(type)
   let sel_save = &selection
   let &selection = "inclusive"
