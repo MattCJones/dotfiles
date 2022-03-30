@@ -1,8 +1,8 @@
 ###############################
 # Constants
 ###############################
-export USER="$(whoami)"
-export WHOME="/mnt/c/Users/$USER"
+export USER="${USER:-`whoami`}"
+export WHOME="${WHOME:-/mnt/c/Users/$USER}"
 
 ###############################
 # Aliases
@@ -130,6 +130,10 @@ alias szrc="source ~/.zshrc"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
 alias todo="vi ~/TODO.md"
+
+# Constants and movement
+export DOCUMENTS="$WHOME/Documents"; alias documents="cd $DOCUMENTS"
+export DOWNLOADS="$WHOME/Downloads"; alias downloads="cd $DOWNLOADS"
 
 ################################
 # Functions
