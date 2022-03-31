@@ -112,10 +112,11 @@ nnoremap & :&&<CR>
 "- Expand current path using %%
 cnoremap %% <C-r>=expand('%:p:h')<CR>/
 "- Bash shell command line movements
+cnoremap <C-d> <Delete>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <C-a> <Home>
-cnoremap <C-d> <Delete>
+cnoremap <C-e> <End>
 "- Remap <C-f> for opening command line editor window
 set cedit=<C-y>
 "- Quickly edit macros e.g. '"<register><Leader>m'; must match cedit key bind
