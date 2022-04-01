@@ -67,8 +67,7 @@ alias touchFoam="touch ${PWD##*/}.foam"
 #- Paraview
 alias pv="touch foam.foam && paraview --data=foam.foam"
 #- Ipython
-alias ipy="ipython --pylab"
-alias ipy3="ipython3 --pylab"
+alias ipy="ipython --pylab --profile=matt"
 #- Tarballing
 alias tarx="tar -xvzf"
 alias tarc="tarBallCompress"
