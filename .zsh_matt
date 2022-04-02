@@ -1,0 +1,70 @@
+### Antigen -- plugin management
+# ============================================================
+# See: https://github.com/zsh-users/antigen 
+# Install: `mkdir -p ~/.antigen; curl -L git.io/antigen > ~/.antigen/antigen.zsh`
+source ~/.antigen/antigen.zsh  # put this at top
+antigen use oh-my-zsh  # use Oh-My-Zsh plugins when applicable
+
+antigen_plugins=(
+  git                               # many git aliases
+  pip                               # pip completion
+  command-not-found                 # suggests packages on fail
+  zsh-users/zsh-autosuggestions     # suggestions for failed commands
+  zsh-users/zsh-syntax-highlighting # fish-like color changes; MUST BE LAST
+)
+
+for plugin in ${antigen_plugins[@]}; do
+  antigen bundle $plugin
+done
+
+antigen apply  # apply antigen settings
+# ============================================================
+
+### Oh-My-Zsh -- helpful commands and plugins
+# ============================================================
+# * Cheatsheet: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
+# * `omz theme set random` after startup
+export ZSH="$HOME/.antigen/bundles/robbyrussell/oh-my-zsh/"  # install location
+
+## ---- Prompt Theme ----
+# ZSH_THEME_RANDOM_CANDIDATES=( 'sunrise' 'jispwoso' 'fino' 'dstufft' )
+# ZSH_THEME='random'  # 'random' by default
+
+source $ZSH/oh-my-zsh.sh  # apply Oh-My-Zsh settings
+# ============================================================
+
+### User Configuration
+# ============================================================
+## ---- Custom Prompt Theme (overrides above themes) ----
+# PROMPT="%{$fg[yellow]%}[%T]%{$fg[cyan]%}[%h]%{$fg[green]%}%n@%{$fg[green]%}%m:%{$fg_no_bold[blue]%}%1~%{$reset_color%}%# "
+# RPROMPT=""
+
+## ---- History ----
+setopt histignorealldups sharehistory  # ignore duplicates
+# # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+# HISTSIZE=1000
+# SAVEHIST=1000
+# HISTFILE=~/.zsh_history
+
+## ---- Completions ----
+CASE_SENSITIVE='true'           # use case-sensitive completion
+COMPLETION_WAITING_DOTS='true'  # ... when waiting for completion
+# HYPHEN_INSENSITIVE='true'     # case-sensitive off, _- interchangeable
+ENABLE_CORRECTION='true'        # enable command auto-correction
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"  # tab-complete colors
+autoload -Uz compinit
+compinit
+_comp_options+=(globdots)  # tab complete dot files
+setopt noautomenu  # Bash-like tab completion
+
+## ---- Utility ----
+# Mass renaming with z-move
+autoload -U zmv # zmv 'foo(*)' 'bar$1'
+alias mmv='noglob zmv -W' # intuitive move without brackets: mmv foo.* bar.*
+# ============================================================
+
+## Copy and uncomment the following to the bottom of ~/.zshrc
+# export WHOME="/path/to/windows/home"
+# source ~/.bash_matt_private
+# source ~/.bash_matt
+# source ~/.zsh_matt

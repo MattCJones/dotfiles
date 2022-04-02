@@ -119,6 +119,7 @@ alias bal="vi ~/.bash_aliases"
 alias bma="vi ~/.bash_matt"
 alias blo="vi ~/.bash_local"
 alias zrc="vi ~/.zshrc"
+alias zma="vi ~/.zsh_matt"
 alias frc="vi ~/.config/fish/config.fish"
 alias sbrc="source ~/.bashrc"
 alias sbpr="source ~/.bash_profile"
@@ -126,6 +127,7 @@ alias sbal="source ~/.bash_aliases"
 alias sbma="source ~/.bash_matt"
 alias sblo="source ~/.bash_local"
 alias szrc="source ~/.zshrc"
+alias szma="source ~/.zsh_matt"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
 alias todo="vi ~/TODO.md"
@@ -337,7 +339,7 @@ if [ -n "$BASH_VERSION" ]; then  # if running bash
     shopt -s extglob  # use ?(list), *(list), +(list), @(list) !(list)
 
     #- Properly expand $VAR/path
-    # shopt -s direxpand
+    shopt -s direxpand
 
     #- Disable Ctrl-s stopping terminal
     stty -ixon
