@@ -34,6 +34,7 @@ alias rml="removeSymLinksInDir"  # remove symbolic links in a directory
 alias s="ls"
 alias sl="ls"
 alias lns="ln -s"
+alias copy="clip.exe"  # `<bash_output> | copy` to copy to Windows clipboard
 alias Grep="_Grep"  # call more complicated grep function
 alias Find="_Find"  # call more complicated find function
 alias Sed="_Sed"    # call more complicated sed function
@@ -70,6 +71,7 @@ alias pv="touch foam.foam && paraview --data=foam.foam"
 #- Ipython
 alias ipy="ipython --pylab --profile=matt"
 #- Tarballing
+alias extractAll="extractFromCompressedFile"
 alias tarx="tar -xvzf"
 alias tarc="tarBallCompress"
 alias dus="du -Psckxh * | sort -h"
@@ -288,7 +290,7 @@ mkd() {
 }
 
 #- Extract from compressed file
-extract() {
+extractFromCompressedFile() {
     if [ -f $1 ] ; then
         case $1 in
             *.tar.bz2)   tar xvjf $1                  ;;
