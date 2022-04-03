@@ -6,11 +6,11 @@ source ~/.antigen/antigen.zsh  # put this at top
 antigen use oh-my-zsh  # use Oh-My-Zsh plugins when applicable
 
 antigen_plugins=(
-  git                               # many git aliases
-  pip                               # pip completion
-  command-not-found                 # suggests packages on fail
-  zsh-users/zsh-autosuggestions     # suggestions for failed commands
-  zsh-users/zsh-syntax-highlighting # fish-like color changes; MUST BE LAST
+  # git                               # many git aliases
+  # pip                               # pip completion
+  # command-not-found                 # suggests packages on fail
+  # zsh-users/zsh-autosuggestions     # suggestions for failed commands
+  # zsh-users/zsh-syntax-highlighting # fish-like color changes; MUST BE LAST
 )
 
 for plugin in ${antigen_plugins[@]}; do
@@ -28,7 +28,7 @@ export ZSH="$HOME/.antigen/bundles/robbyrussell/oh-my-zsh/"  # install location
 
 ## ---- Prompt Theme ----
 # ZSH_THEME_RANDOM_CANDIDATES=( 'sunrise' 'jispwoso' 'fino' 'dstufft' )
-# ZSH_THEME='random'  # 'random' by default
+ZSH_THEME='random'  # 'random' by default
 
 source $ZSH/oh-my-zsh.sh  # apply Oh-My-Zsh settings
 # ============================================================
@@ -36,8 +36,11 @@ source $ZSH/oh-my-zsh.sh  # apply Oh-My-Zsh settings
 ### User Configuration
 # ============================================================
 ## ---- Custom Prompt Theme (overrides above themes) ----
-# PROMPT="%{$fg[yellow]%}[%T]%{$fg[cyan]%}[%h]%{$fg[green]%}%n@%{$fg[green]%}%m:%{$fg_no_bold[blue]%}%1~%{$reset_color%}%# "
-# RPROMPT=""
+function myprompt () {
+  PROMPT="%{$fg[yellow]%}[%T]%{$fg[cyan]%}[%h]%{$fg[green]%}%n@%{$fg[green]%}%m:%{$fg_no_bold[blue]%}%1~%{$reset_color%}%# "
+  RPROMPT=""
+}
+# myprompt
 
 ## ---- History ----
 setopt histignorealldups sharehistory  # ignore duplicates
@@ -51,11 +54,9 @@ CASE_SENSITIVE='true'           # use case-sensitive completion
 COMPLETION_WAITING_DOTS='true'  # ... when waiting for completion
 # HYPHEN_INSENSITIVE='true'     # case-sensitive off, _- interchangeable
 ENABLE_CORRECTION='true'        # enable command auto-correction
-zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"  # tab-complete colors
-autoload -Uz compinit
-compinit
-_comp_options+=(globdots)  # tab complete dot files
+setopt globdots    # tab-complete dot files
 setopt noautomenu  # Bash-like tab completion
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"  # tab-complete colors
 
 ## ---- Utility ----
 # Mass renaming with z-move

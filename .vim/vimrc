@@ -37,48 +37,53 @@ endif
 
 " Basic Settings {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- General
-set nobackup                    " no backup files
-set belloff=all                 " no bell chimes while editing
-set colorcolumn=80,100          " highlight columns
-set encoding=utf-8              " only use UTF-8 characters
-set noesckeys                   " fix startup replace mode bug when using WSL 
-set hidden                      " change buffers without saving
-set hlsearch                    " highlight matches
-set laststatus=2                " always show status line in last window
-set lazyredraw                  " wait to draw result of repeated macros
-set linebreak                   " linewrap full words
-set incsearch                   " highlight search while typing
-set matchpairs+=<:>             " match < > with %
-set mouse=n                     " enable use of mouse in normal mode
-set number                      " line numbers; use with relativenumber
-set relativenumber              " relative line numbers
-set splitright                  " open vertical splits on right hand side
-set scrolloff=0                 " lines of buffer from top/bottom of display
-set spelllang=en_us             " US dictionary for spell check
-set nostartofline               " stay in column when C-d, C-u, C-b, C-f
-set noswapfile                  " no swap files
-set viminfo-=<50,s10            " save large yanks after close
-set nowritebackup               " no backup before writing file
+"- Appearance and layout
+set colorcolumn=80,100    " highlight columns
+set hlsearch              " highlight matches
+set incsearch             " highlight search while typing
+set laststatus=2          " always show status line in last window
+set lazyredraw            " wait to draw result of repeated macros
+set linebreak             " linewrap full words
+set number                " line numbers; use with relativenumber
+set relativenumber        " relative line numbers
+set splitright            " open vertical splits on right hand side
+set scrolloff=0           " lines of buffer from top/bottom of display
 
 "- Command prompt completion
 set wildignore=*.o,*~,*.pyc,__pycache__,*.dep,*.png,*.jpg,*.gif,*.swp
-set wildmode=longest,list  " complete common match then show available
-set wildcharm=<C-z>  " used in macros to initiate <S-Tab> completion
+set wildmode=longest,list " complete common match then show available
+set wildcharm=<C-z>       " used in macros to initiate <S-Tab> completion
+
+"- Movement
+set mouse=n               " enable use of mouse in normal mode
+set nostartofline         " stay in column when C-d, C-u, C-b, C-f
 
 "- Searching
-set ignorecase     " use with smartcase
-set smartcase      " foo matches Foo and FOO; Foo matches Foo
-set tagcase=match  " match case for tags
+set ignorecase            " use with smartcase
+set smartcase             " foo matches Foo and FOO; Foo matches Foo
+set matchpairs+=<:>       " match < > with %
+set tagcase=match         " match case for tags
+
+"- System
+set belloff=all           " no bell chimes while editing
+set encoding=utf-8        " only use UTF-8 characters
+set hidden                " change buffers without saving
+set nobackup              " no backup files
+set noesckeys             " fix startup replace mode bug when using WSL
+set noswapfile            " no swap files
+set nowritebackup         " no backup before writing file
+set shell=/usr/bin/bash   " set the shell for :term
+set spelllang=en_us       " US dictionary for spell check
+set viminfo-=<50,s10      " save large yanks after close
 
 "- Tab with spaces
-set autoindent     " copy indent from current line to new line
-set expandtab      " spaces instead of literal tab
-set tabstop=4      " number of spaces in a tab
-set shiftround     " round to tab indent level with '<' and '>'
-set shiftwidth=4   " number of spaces to use in each (auto)indent
-set smarttab       " shiftwidth instead of tabstop at linestart
-set softtabstop=4  " backspace through spaced tabs
+set autoindent            " copy indent from current line to new line
+set expandtab             " spaces instead of literal tab
+set tabstop=4             " number of spaces in a tab
+set shiftround            " round to tab indent level with '<' and '>'
+set shiftwidth=4          " number of spaces to use in each (auto)indent
+set smarttab              " shiftwidth instead of tabstop at linestart
+set softtabstop=4         " backspace through spaced tabs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
@@ -321,7 +326,10 @@ command! Brc edit ~/.bashrc
 command! Bpr edit ~/.bash_profile
 command! Bal edit ~/.bash_aliases
 command! Bma edit ~/.bash_matt
+command! Bmap edit ~/.bash_matt_private
 command! Blo edit ~/.bash_local
+command! Zrc edit ~/.zshrc
+command! Zma edit ~/.zsh_matt
 "- Delete buffer but keep split intact
 command! Bd silent! execute "b#|bd#"
 "- Delete all buffers but current

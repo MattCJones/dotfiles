@@ -19,7 +19,7 @@ alias lsp="showFullPath"  # show pull path
 alias lsd="ls -d */"  # show only directories
 alias hist="history"
 alias ag="ag --color-path '0;35' --color-line-number '0;32' --color-match '1;31'"
-alias grep="grep -nE --color --exclude-dir='{.git,__pycache__}'"
+alias grep="grep -E --color --exclude-dir='{.git,__pycache__}'"
 alias agrep="alias | grep"
 alias egrep="env | grep"
 alias sgrep="set | grep"
@@ -55,9 +55,10 @@ alias ....l="cd ../../..; ls"
 alias ...l="cd ../..; ls"
 alias ..l="cd ..; ls"
 alias cdl="cdThenLs"      # change directory and run ls command
-alias cdn="cdNewestDir"  # change to newest director
-alias cdo="cdOldestDir"  # change to oldest director
-alias sd="saveDir "      # save a directory to a var; call that var to cd
+alias cdn="cdNewestDir"   # change to newest director
+alias cdo="cdOldestDir"   # change to oldest director
+alias cdw="cdWindowsDir"  # change to C:\\Windows\style\path\directory
+alias sd="saveDir "       # save a directory to a var; call that var to cd
 
 #- Software
 #- OpenFOAM
@@ -212,6 +213,13 @@ function cdOldestDir {
     cd "$(\ls -1dt ./*/ | tail -n 1)";
 }
 
+function cdWindowsDir {
+    #- Move into a C:\\Windows\style\path\directory 
+    windir=$1
+    lindir=`wslpath $windir`
+    cd $lindir
+}
+
 function saveDir {
     #- Save a directory as an alias for later
     eval "alias $1='cd $PWD'";
@@ -301,7 +309,7 @@ extract() {
 }
 
 #- Finds x newest files recursively in a directory - only non-hidden stuff
-newest() {
+newestFiles() {
     # $1 - number of files to find
     if [ $# -eq 1 ]; then
         N=$1

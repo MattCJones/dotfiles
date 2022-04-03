@@ -10,10 +10,10 @@
             },
             "keys": "ctrl+c"
         },
-        {
-            "command": "paste",
-            "keys": "ctrl+v"
-        },
+        // { // ctrl+v interferes with Vim selection --> disable
+        //     "command": "paste",
+        //     "keys": "ctrl+v"
+        // },
         {
             "command": "find",
             "keys": "ctrl+shift+f"
@@ -34,6 +34,9 @@
     "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
     "experimental.rendering.forceFullRepaint": false,
     "experimental.rendering.software": false,
+    "initialCols": 120,
+    "initialRows": 50,
+    "multiLinePasteWarning": false,
     "profiles": 
     {
         "defaults": 
@@ -45,6 +48,7 @@
                 "window"
             ],
             "colorScheme": "One Half Light",
+            //"colorScheme": "Tango Light",
             "font":{
                 "face": "Consolas",
                 "size": 12
