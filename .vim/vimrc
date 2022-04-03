@@ -148,13 +148,17 @@ nnoremap yon :setlocal number! relativenumber! signcolumn=no<CR>
 "- Toggle scrolloff to maximum so that screen moves with j and k (like Ctrl-z)
 nnoremap yoz :let &scrolloff=999-&scrolloff<CR>M
 
+"- Copy/Pasta
+"- For use of clipboard, make sure X11 server is enabled
+"- Copy highlighted text
+vnoremap <Leader>c "+y
 "- Toggle paste
 nnoremap yop :set paste!<CR>:set paste?<CR>
 nnoremap <Leader>p :set paste!<CR>:set paste?<CR>
-
-"- Paste from clipboard (make sure X11 server is enabled)
-nnoremap <Leader>P :set paste<CR>:put +<CR>:set nopaste<CR>
-
+"- Paste on line below
+nnoremap <Leader>V :set paste<CR>:put +<CR>:set nopaste<CR>
+"- Paste on inline
+nnoremap <Leader>v "+p
 "- Select pasted text; overrides useless select-mode bind
 nnoremap gV `[V`]
 
@@ -180,8 +184,8 @@ nnoremap csl a <Esc>h
 nnoremap csk mmO<Esc>`m:delmarks m<CR>
 nnoremap csj mmo<Esc>`m:delmarks m<CR>
 
-"- Vim RC commands
-nnoremap <Leader>v :edit $MYVIMRC<CR>
+"- Vim RC configuration/source commands
+" nnoremap <Leader>v :edit $MYVIMRC<CR>  " 2022-04-03: conflict with paste
 nnoremap <Leader>s :source %<CR>:edit %<CR>
 nnoremap <Leader>S :source $MYVIMRC<CR>:edit %<CR>
 
@@ -191,7 +195,7 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-"- Set Ctrl-hjkl to move between windows
+""- Set Ctrl-hjkl to move between windows
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k

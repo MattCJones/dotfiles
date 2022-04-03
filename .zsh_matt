@@ -7,10 +7,10 @@ antigen use oh-my-zsh  # use Oh-My-Zsh plugins when applicable
 
 antigen_plugins=(
   # git                               # many git aliases
-  # pip                               # pip completion
-  # command-not-found                 # suggests packages on fail
-  # zsh-users/zsh-autosuggestions     # suggestions for failed commands
-  # zsh-users/zsh-syntax-highlighting # fish-like color changes; MUST BE LAST
+  pip                               # pip completion
+  command-not-found                 # suggests packages on fail
+  zsh-users/zsh-autosuggestions     # suggestions for failed commands
+  zsh-users/zsh-syntax-highlighting # fish-like color changes; MUST BE LAST
 )
 
 for plugin in ${antigen_plugins[@]}; do

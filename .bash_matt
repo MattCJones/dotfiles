@@ -74,15 +74,16 @@ alias tarx="tar -xvzf"
 alias tarc="tarBallCompress"
 alias dus="du -Psckxh * | sort -h"
 #- Vim
+alias vi="vim"
 alias vin="vim -N -u NONE"  # set :finish at breakpoints in vimrc when debugging
 alias vip="vim -"  # pipe output into Vim
 alias vinop="vim --noplugins"
 alias vir="vim -RmM"  # readonly mode
-alias vrc="vi ~/.vim/vimrc"
-alias vrcp="vi ~/.vim/vimrc_plugins"
-alias vrcm="vi ~/.vim/vimrc_more"
-alias vrco="vi ~/.vim/vimrc_openfoam"
-alias vrcl="vi ~/.vim/vimrc_local"
+alias vrc="vim ~/.vim/vimrc"
+alias vrcp="vim ~/.vim/vimrc_plugins"
+alias vrcm="vim ~/.vim/vimrc_more"
+alias vrco="vim ~/.vim/vimrc_openfoam"
+alias vrcl="vim ~/.vim/vimrc_local"
 alias vimProfile="vim --cmd 'profile start vimrc_profile' --cmd 'profile! file ~/.vim/vimrc'"
 alias vimStartupTime="vim --startuptime /tmp/startup.log +q && vim /tmp/startup.log"
 alias vis="vim -u NONE -N -s"
@@ -90,7 +91,7 @@ alias vil="vim -S ~/.vim/lastSession.vim"
 alias vic="vimCommandFromFile"  # run vim command from a file
 alias vmore="vim -u ~/.vim/vimrc_more"
 alias vmo="vmore"
-alias viToHTML='vi -c TOhtml -c wqa'
+alias viToHTML='vim -c TOhtml -c wqa'
 alias vgif='vimgif'
 #- Latexmk
 alias lmk="latexmk -pdf -pvc -lualatex"
@@ -113,15 +114,15 @@ alias gff="gitFilesCached"
 alias pyProfile="python -m cProfile"  # profile Python code
 
 #- Configuration files
-alias tco="vi ~/.tmux.conf"
-alias brc="vi ~/.bashrc"
-alias bpr="vi ~/.bash_profile"
-alias bal="vi ~/.bash_aliases"
-alias bma="vi ~/.bash_matt"
-alias blo="vi ~/.bash_local"
-alias zrc="vi ~/.zshrc"
-alias zma="vi ~/.zsh_matt"
-alias frc="vi ~/.config/fish/config.fish"
+alias tco="vim ~/.tmux.conf"
+alias brc="vim ~/.bashrc"
+alias bpr="vim ~/.bash_profile"
+alias bal="vim ~/.bash_aliases"
+alias bma="vim ~/.bash_matt"
+alias blo="vim ~/.bash_local"
+alias zrc="vim ~/.zshrc"
+alias zma="vim ~/.zsh_matt"
+alias frc="vim ~/.config/fish/config.fish"
 alias sbrc="source ~/.bashrc"
 alias sbpr="source ~/.bash_profile"
 alias sbal="source ~/.bash_aliases"
@@ -131,7 +132,7 @@ alias szrc="source ~/.zshrc"
 alias szma="source ~/.zsh_matt"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
-alias todo="vi ~/TODO.md"
+alias todo="vim ~/TODO.md"
 alias z="zsh"
 
 # Constants and movement
