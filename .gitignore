@@ -14,3 +14,5 @@ WindowsPowerShell/Scripts
 
 .vim/after
 .vim/lastSession.vim
+
+CHANGES.md

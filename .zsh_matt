@@ -7,6 +7,7 @@ antigen use oh-my-zsh  # use Oh-My-Zsh plugins when applicable
 
 antigen_plugins=(
   # git                               # many git aliases
+  git-prompt                        # git info in prompt w/ $git_super_status
   pip                               # pip completion
   command-not-found                 # suggests packages on fail
   zsh-users/zsh-autosuggestions     # suggestions for failed commands
@@ -26,9 +27,11 @@ antigen apply  # apply antigen settings
 # * `omz theme set random` after startup
 export ZSH="$HOME/.antigen/bundles/robbyrussell/oh-my-zsh/"  # install location
 
-## ---- Prompt Theme ----
-# ZSH_THEME_RANDOM_CANDIDATES=( 'sunrise' 'jispwoso' 'fino' 'dstufft' )
-ZSH_THEME='random'  # 'random' by default
+# ## ---- Prompt Theme ----
+# # See ~/.antigen/bundles/robbyrussell/oh-my-zsh/themes/
+# ZSH_THEME_RANDOM_CANDIDATES=( 'tjkirch' 'sunrise' 'jispwoso' 'itchy' 'fino' 'dstufft' )
+# ZSH_THEME='random'  # 'random' by default
+ZSH_THEME=''  # 'random' by default
 
 source $ZSH/oh-my-zsh.sh  # apply Oh-My-Zsh settings
 # ============================================================
@@ -36,18 +39,49 @@ source $ZSH/oh-my-zsh.sh  # apply Oh-My-Zsh settings
 ### User Configuration
 # ============================================================
 ## ---- Custom Prompt Theme (overrides above themes) ----
-function myprompt () {
-  PROMPT="%{$fg[yellow]%}[%T]%{$fg[cyan]%}[%h]%{$fg[green]%}%n@%{$fg[green]%}%m:%{$fg_no_bold[blue]%}%1~%{$reset_color%}%# "
-  RPROMPT=""
+# Supported colors: red, blue, green, cyan, yellow, magenta, black, & white
+timecolor=$fg_no_bold[black]
+usercolor=$fg[magenta]
+pwdcolor=$fg_no_bold[blue]
+function prompt_matt_short () {
+  PROMPT="%{$pwdcolor%}%(5~|%-1~/…/%3~|%4~)%{$reset_color%}/ "
+  precmd(){ print ; }  # overwrite pre-command for short prompt
+  if [[ `type git_super_status | grep 'function'` ]]; then;
+    RPROMPT='$(git_super_status)'  # just git info from git-prompt
+    # RPROMPT="$(git_super_status) %{$usercolor%}%n%{$timecolor%}@%{$usercolor%}%m %{$timecolor%}%*"
+  else;
+    RPROMPT=""  # no RHS info, or uncomment other RPROMPT
+  fi
 }
-# myprompt
+function prompt_matt_long () {
+  PROMPT=""
+  RPROMPT=""
+  precmd() {
+    LEFT="$pwdcolor$PWD "
+    RIGHT=" $usercolor$(whoami)$timecolor@$usercolor$(hostname) $timecolor$(date +%H:%m:%S)"
+    addspaces=20  # width not perfectly computed --> calibrate spaces
+    RIGHTWIDTH=$(($COLUMNS-${#LEFT}+addspaces))
+    print
+    print $LEFT$timecolor${(l:$RIGHTWIDTH::.:)RIGHT}
+  }
+  PS1=""
+  RPS1="%(1v.%F{099}%1v %f.)"
+}
+prompt_matt_short
+# prompt_matt_long
+
+# ---- Directory Colors ----
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+fi
 
 ## ---- History ----
 setopt histignorealldups sharehistory  # ignore duplicates
-# # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-# HISTSIZE=1000
-# SAVEHIST=1000
-# HISTFILE=~/.zsh_history
+# # Keep N lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+alias hist='history -i'  # show history datetime by default
 
 ## ---- Completions ----
 CASE_SENSITIVE='true'           # use case-sensitive completion
@@ -62,6 +96,21 @@ zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"  # tab-complete colors
 # Mass renaming with z-move
 autoload -U zmv # zmv 'foo(*)' 'bar$1'
 alias mmv='noglob zmv -W' # intuitive move without brackets: mmv foo.* bar.*
+# Bash-like behavior for bg and fg
+bg() {
+  if [[ $# -eq 1 && $1 = - ]]; then
+    builtin bg %-
+  else
+    builtin bg %"$@"
+  fi
+}
+fg() {
+  if [[ $# -eq 1 && $1 = - ]]; then
+    builtin fg %-
+  else
+    builtin fg %"$@"
+  fi
+}
 # ============================================================
 
 ## Copy and uncomment the following to the bottom of ~/.zshrc

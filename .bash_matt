@@ -21,9 +21,7 @@ alias hist="history"
 alias ag="ag --color-path '0;35' --color-line-number '0;32' --color-match '1;31'"
 alias grep="grep -E --color --exclude-dir='{.git,__pycache__}'"
 alias agrep="alias | grep"
-alias egrep="env | grep"
-alias sgrep="set | grep"
-alias aesgrep="_aesgrep"
+alias setgrep="_setgrep"
 alias md="mkdir"
 alias mdp="mkdir -p"
 alias rd="rmdir"
@@ -155,8 +153,8 @@ function showFullPath {
     fi
 }
 
-function _aesgrep {
-    #- Search alias and set
+function _setgrep {
+    #- Search all settings: alias, env, and set
     alias | grep $1
     env | grep $1
     set | grep $1
@@ -234,7 +232,7 @@ function sbatchAllInDir {
     runFile=$2
     if [ -z "$inDir" ]; then
         echo "Error! No target directory. Exiting."
-        exit
+        return
     fi
     if [ -z "$runFile" ]; then
         runFile="run.sh"
@@ -336,6 +334,10 @@ calc() {
 ###############################
 # Settings
 ###############################
+# Set custom directory colors in .dircolors
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+fi
 if [ -n "$BASH_VERSION" ]; then  # if running bash
     #- Set command-line prompt
     export PS1="\[\e[0;33m\][\t]\[\e[0;36m\][\!]\[\e[0;32m\]\u@\h\[\e[00m\]:\[\e[1;34m\]\W\[\e[0;00m\]\$ "

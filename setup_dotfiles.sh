@@ -24,3 +24,7 @@ function linkfiles() {
 linkfiles "${dotfiles[@]}" "$HOME" "dot"
 linkfiles "${vimfiles[@]}" "$HOME/.vim" "vim"
 linkfiles "${ipyfiles[@]}" "$HOME/.ipython/profile_matt" "ipy"
+
+# Copy Windows Terminal settings
+wintermdir=/mnt/c/Users/weehi/AppData/Local/Packages/Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe/LocalState/
+cp Windows/WindowsTerminal/settings.json $wintermdir/

@@ -24,7 +24,7 @@ call plug#begin('~/.vim/plugged')
 " ----------------------------------------------------------
 "- Appearance
 Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'  " status bar
-"Plug 'chrisbra/Colorizer'  " :ColorToggle toggle colors #ff0000 red @slow
+" Plug 'chrisbra/Colorizer'  " :ColorToggle toggle colors #ff0000 red @slow
 Plug 'flazz/vim-colorschemes'  " color schemes
 Plug 'kshenoy/vim-signature'  " put marks in the sign column
 Plug 'mhinz/vim-startify'  " better start screen, list mru files
@@ -50,10 +50,11 @@ Plug 'tpope/vim-scriptease'  " g== and g=<movement> to eval text and much more
 Plug 'tpope/vim-unimpaired'  " [e [<Space> ., movement ([q [f [b ...) mappings (yos )
 
 "- Git tools
-Plug 'tpope/vim-fugitive'  " :Gdiff
-Plug 'airblade/vim-gitgutter'  " ]c, [c to jump; refresh with :GitGutterAll @slow
-Plug 'gregsexton/gitv'  " view git info; 2 modes: :Gitv(browser) :Gitv!(file)
-" Plug 'mhinz/vim-signify'  " ]c, [c to jump; more responsive, less pretty than gitgutter @slow
+Plug 'tpope/vim-fugitive'  " :Git <cmd> :Gclog :Gdiff <SHA> :Gedit <SHA>
+Plug 'airblade/vim-gitgutter'  " vis hunks in file, ]c [c to jump @slow
+" Plug 'mhinz/vim-signify'  " like gitgutter (+responsive, -pretty) @slow
+Plug 'jreybert/vimagit'  " visualize git changes, selective commit,:Magit
+Plug 'sodapopcan/vim-twiggy'  " manage branches
 
 "- Inspection and navigation
 Plug 'tpope/vim-characterize'  " enhances ga
@@ -80,7 +81,8 @@ Plug 'w0rp/ale'  " asynchronous syntax checking and linting, :ALEToggle
 "Plug 'sheerun/vim-polyglot'  " syntax colors for many languages, messes up airfoil files
 "Plug 'jbmorgado/vim-pine-script'  " edit TradingView Pine script
 "Plug 'effi/vim-OpenFoam-syntax'  " Vim syntax - opens extra buffers :(;  or use Tobias's; manual install
-Plug 'lervag/vim-foam'  " doesn't work very well; good to just manually set up .vim/syntax
+" Plug 'lervag/vim-foam'  " doesn't work very well; good to just manually set up .vim/syntax
+Plug 'MattCJones/vim-foam-programmer'
 
 "- Text completion
 Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'  " customizable snippets
@@ -129,7 +131,6 @@ Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
 "Plug 'christoomey/vim-tmux-navigator'  " ctrl-hjkl through Vim and Tmux; added this functionality in my vimrc
 
 "- Newly added
-Plug 'MattCJones/vim-foam-programmer'
 
 "- Consider
 " Plug 'thinca/vim-quickrun' - run commands on file quickly, :QuickRun -python
@@ -141,6 +142,7 @@ Plug 'MattCJones/vim-foam-programmer'
 "- Don't like
 "Plug 'rking/ag.vim'  " improved grep, :Ag [options] {pattern} [{directory}]; DEP: ag
 "Plug 'kien/ctrlp.vim'  " fuzzy file name finder; (replaced by unite)
+" Plug 'gregsexton/gitv'  " repo viewer; :Gitv(browser) :Gitv!(file); NOT MAINTAINED
 "Plug 'terryma/vim-multiple-cursors'  " multiple cursors, unnecessary but fun
 "Plug 'scrooloose/nerdtree'  " file explorer, buggy, don't like, breaks defaults
 "Plug 'justinmk/vim-sneak'  " breaks default capabilities
