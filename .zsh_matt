@@ -7,17 +7,20 @@ antigen use oh-my-zsh  # use Oh-My-Zsh plugins when applicable
 
 antigen_plugins=(
   # git                               # many git aliases
-  git-prompt                        # git info in prompt w/ $git_super_status
-  pip                               # pip completion
-  command-not-found                 # suggests packages on fail
-  zsh-users/zsh-autosuggestions     # suggestions for failed commands
-  zsh-users/zsh-syntax-highlighting # fish-like color changes; MUST BE LAST
+  git-prompt                         # git info in prompt w/ $git_super_status
+  pip                                # pip completion
+  command-not-found                  # suggests packages on fail
+  # z                                  # `z` frequently used files
+  zsh-users/zsh-autosuggestions      # suggestions for failed commands
+  zsh-users/zsh-syntax-highlighting  # fish-like color changes; MUST BE LAST
 )
+# Define function to determine if a plugin exists
+function isplugin() { if (($antigen_plugins[(Ie)$1])); then return 0; else return -1; fi; }
 
+# Process Antigen plugins
 for plugin in ${antigen_plugins[@]}; do
   antigen bundle $plugin
 done
-
 antigen apply  # apply antigen settings
 # ============================================================
 
@@ -27,10 +30,9 @@ antigen apply  # apply antigen settings
 # * `omz theme set random` after startup
 export ZSH="$HOME/.antigen/bundles/robbyrussell/oh-my-zsh/"  # install location
 
-# ## ---- Prompt Theme ----
+# ## ---- OMZ Prompt Theme ----
 # # See ~/.antigen/bundles/robbyrussell/oh-my-zsh/themes/
 # ZSH_THEME_RANDOM_CANDIDATES=( 'tjkirch' 'sunrise' 'jispwoso' 'itchy' 'fino' 'dstufft' )
-# ZSH_THEME='random'  # 'random' by default
 ZSH_THEME=''  # 'random' by default
 
 source $ZSH/oh-my-zsh.sh  # apply Oh-My-Zsh settings
@@ -45,10 +47,15 @@ usercolor=$fg[magenta]
 pwdcolor=$fg_no_bold[blue]
 function prompt_matt_short () {
   PROMPT="%{$pwdcolor%}%(5~|%-1~/…/%3~|%4~)%{$reset_color%}/ "
-  precmd(){ print ; }  # overwrite pre-command for short prompt
-  if [[ `type git_super_status | grep 'function'` ]]; then;
-    RPROMPT='$(git_super_status)'  # just git info from git-prompt
-    # RPROMPT="$(git_super_status) %{$usercolor%}%n%{$timecolor%}@%{$usercolor%}%m %{$timecolor%}%*"
+  precmd(){}  # overwrite pre-command for short prompt
+  # Use git-prompt for git info if it is installed
+  # if [[ ${antigen_plugins[(r)git-prompt]} == git-prompt ]]; then
+  if (isplugin 'git-prompt'); then
+    ZSH_THEME_GIT_PROMPT_PREFIX="("
+    ZSH_THEME_GIT_PROMPT_SUFFIX=") "
+    PROMPT='$(git_super_status)'$PROMPT
+    RPROMPT=""
+    # RPROMPT='$(git_super_status)'" %{$usercolor%}%n%{$timecolor%}@%{$usercolor%}%m %{$timecolor%}%*"
   else;
     RPROMPT=""  # no RHS info, or uncomment other RPROMPT
   fi
@@ -77,13 +84,14 @@ fi
 
 ## ---- History ----
 setopt histignorealldups sharehistory  # ignore duplicates
-# # Keep N lines of history within the shell and save it to ~/.zsh_history:
+# Keep N lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.zsh_history
 alias hist='history -i'  # show history datetime by default
 
 ## ---- Completions ----
+autoload -Uz compinit && compinit
 CASE_SENSITIVE='true'           # use case-sensitive completion
 COMPLETION_WAITING_DOTS='true'  # ... when waiting for completion
 # HYPHEN_INSENSITIVE='true'     # case-sensitive off, _- interchangeable
@@ -92,10 +100,17 @@ setopt globdots    # tab-complete dot files
 setopt noautomenu  # Bash-like tab completion
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"  # tab-complete colors
 
+
+## ---- Command Line Editing ----
+# Use emacs keybindings even if our EDITOR is set to vi
+bindkey -e
+# Have ctrl-u behave the same as Bash, delete part of line
+bindkey \^U backward-kill-line
+
 ## ---- Utility ----
 # Mass renaming with z-move
 autoload -U zmv # zmv 'foo(*)' 'bar$1'
-alias mmv='noglob zmv -W' # intuitive move without brackets: mmv foo.* bar.*
+alias mmv='noglob zmv -W' # intuitive mass substitution: mmv foo.* bar.*
 # Bash-like behavior for bg and fg
 bg() {
   if [[ $# -eq 1 && $1 = - ]]; then
@@ -111,9 +126,14 @@ fg() {
     builtin fg %"$@"
   fi
 }
+# Quality of life aliases
+if (isplugin z); then; else;  # if z plugin is not set
+  alias z="zsh"  # use z to call zsh
+fi
 # ============================================================
 
 ## Copy and uncomment the following to the bottom of ~/.zshrc
+# autoload -Uz bashcompinit && bashcompinit
 # export WHOME="/path/to/windows/home"
 # source ~/.bash_matt_private
 # source ~/.bash_matt

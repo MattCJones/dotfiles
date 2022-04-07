@@ -21,7 +21,7 @@ alias hist="history"
 alias ag="ag --color-path '0;35' --color-line-number '0;32' --color-match '1;31'"
 alias grep="grep -E --color --exclude-dir='{.git,__pycache__}'"
 alias agrep="alias | grep"
-alias setgrep="_setgrep"
+alias allgrep="_allgrep"
 alias md="mkdir"
 alias mdp="mkdir -p"
 alias rd="rmdir"
@@ -133,7 +133,6 @@ alias szma="source ~/.zsh_matt"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
 alias todo="vim ~/TODO.md"
-alias z="zsh"
 
 # Constants and movement
 export DOCUMENTS="$WHOME/Documents"; alias documents="cd $DOCUMENTS"
@@ -153,7 +152,7 @@ function showFullPath {
     fi
 }
 
-function _setgrep {
+function _allgrep {
     #- Search all settings: alias, env, and set
     alias | grep $1
     env | grep $1
