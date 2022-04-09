@@ -5,12 +5,15 @@
 source ~/.antigen/antigen.zsh  # put this at top
 antigen use oh-my-zsh  # use Oh-My-Zsh plugins when applicable
 
+# See ~/.antigen/bundles/
 antigen_plugins=(
+  command-not-found                  # suggests packages on fail
   # git                               # many git aliases
   git-prompt                         # git info in prompt w/ $git_super_status
   pip                                # pip completion
-  command-not-found                  # suggests packages on fail
-  # z                                  # `z` frequently used files
+  supercrabtree/k                    # `k` improved ls -l
+  z                                  # `z` jump to frequently used files
+  zsh-users/zsh-completions          # extra completions
   zsh-users/zsh-autosuggestions      # suggestions for failed commands
   zsh-users/zsh-syntax-highlighting  # fish-like color changes; MUST BE LAST
 )
@@ -27,56 +30,75 @@ antigen apply  # apply antigen settings
 ### Oh-My-Zsh -- helpful commands and plugins
 # ============================================================
 # * Cheatsheet: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
-# * `omz theme set random` after startup
 export ZSH="$HOME/.antigen/bundles/robbyrussell/oh-my-zsh/"  # install location
 
-# ## ---- OMZ Prompt Theme ----
-# # See ~/.antigen/bundles/robbyrussell/oh-my-zsh/themes/
-# ZSH_THEME_RANDOM_CANDIDATES=( 'tjkirch' 'sunrise' 'jispwoso' 'itchy' 'fino' 'dstufft' )
-ZSH_THEME=''  # 'random' by default
+## ---- OMZ Prompt Theme ----
+# See ~/.antigen/bundles/robbyrussell/oh-my-zsh/themes/
+# ZSH_THEME_RANDOM_CANDIDATES=( 'gnzh' 'bira' 'intheloop' 'tjkirch' )  # long
+# ZSH_THEME_RANDOM_CANDIDATES=( 'flazz' 'sunrise' 'miloshadzic' )  # short
 
 source $ZSH/oh-my-zsh.sh  # apply Oh-My-Zsh settings
+# omz theme use gnzh  # random, gnzh,
+# # ============================================================
+
+### Custom Prompt Theme (overrides above themes)
 # ============================================================
+# Supported colors: red, blue, green, cyan, yellow, magenta, black, & white
+timecolor="%B%F{black}"
+usercolor="%b%F{magenta}"
+pwdcolor="%b%F{blue}"  # %B%F{blue} for actual dir color
+arrowcolor="%b%F{black}"
+othercolor="%b%F{cyan}"
+
+# Git branch info
+if (isplugin 'git-prompt'); then
+  git_branch='$(git_super_status)'
+  ZSH_THEME_GIT_PROMPT_PREFIX="‹"
+  ZSH_THEME_GIT_PROMPT_SUFFIX="›%f"
+else  # if no git-prompt plugin
+  git_branch='$(git_prompt_info)'
+fi
+
+# User and hostname - change color if using SSH
+function userhost_info() {
+  # Check if we are on SSH or not
+  if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
+    echo "$othercolor%n%f$timecolor@$othercolor%M%f"
+  else
+    echo "$usercolor%n%f$timecolor@$usercolor%M%f"
+  fi
+}
+
+function prompt_matt_short() {
+  precmd(){}  # printed before prompt
+  PROMPT="$pwdcolor%(5~|%-1~/…/%2~|%4~) $arrowcolor❯ "  # ⇒➤»❯
+  # Use git-prompt for git info if it is installed
+  if (isplugin 'git-prompt'); then
+    PROMPT="$git_branch $PROMPT"
+  fi
+  # Only display user info when SSHed into another machine
+  if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
+    PROMPT="$(userhost_info) $PROMPT"
+  fi
+  RPROMPT=""  # no RHS info, or uncomment other RPROMPT
+}
+
+function prompt_matt_long() {
+  setopt prompt_subst
+  precmd(){ }  # { print; }  # printed before prompt
+  local user_host=$(userhost_info)
+  local current_dir="$pwdcolor%~%f%b"
+  PROMPT="$arrowcolor╭─$user_host $current_dir $git_branch
+$arrowcolor╰─➤ %f "
+  RPROMPT=""
+}
+
+# Set prompt
+# prompt_matt_short
+prompt_matt_long
 
 ### User Configuration
 # ============================================================
-## ---- Custom Prompt Theme (overrides above themes) ----
-# Supported colors: red, blue, green, cyan, yellow, magenta, black, & white
-timecolor=$fg_no_bold[black]
-usercolor=$fg[magenta]
-pwdcolor=$fg_no_bold[blue]
-function prompt_matt_short () {
-  PROMPT="%{$pwdcolor%}%(5~|%-1~/…/%3~|%4~)%{$reset_color%}/ "
-  precmd(){}  # overwrite pre-command for short prompt
-  # Use git-prompt for git info if it is installed
-  # if [[ ${antigen_plugins[(r)git-prompt]} == git-prompt ]]; then
-  if (isplugin 'git-prompt'); then
-    ZSH_THEME_GIT_PROMPT_PREFIX="("
-    ZSH_THEME_GIT_PROMPT_SUFFIX=") "
-    PROMPT='$(git_super_status)'$PROMPT
-    RPROMPT=""
-    # RPROMPT='$(git_super_status)'" %{$usercolor%}%n%{$timecolor%}@%{$usercolor%}%m %{$timecolor%}%*"
-  else;
-    RPROMPT=""  # no RHS info, or uncomment other RPROMPT
-  fi
-}
-function prompt_matt_long () {
-  PROMPT=""
-  RPROMPT=""
-  precmd() {
-    LEFT="$pwdcolor$PWD "
-    RIGHT=" $usercolor$(whoami)$timecolor@$usercolor$(hostname) $timecolor$(date +%H:%m:%S)"
-    addspaces=20  # width not perfectly computed --> calibrate spaces
-    RIGHTWIDTH=$(($COLUMNS-${#LEFT}+addspaces))
-    print
-    print $LEFT$timecolor${(l:$RIGHTWIDTH::.:)RIGHT}
-  }
-  PS1=""
-  RPS1="%(1v.%F{099}%1v %f.)"
-}
-prompt_matt_short
-# prompt_matt_long
-
 # ---- Directory Colors ----
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -92,11 +114,11 @@ alias hist='history -i'  # show history datetime by default
 
 ## ---- Completions ----
 autoload -Uz compinit && compinit
-CASE_SENSITIVE='true'           # use case-sensitive completion
+CASE_SENSITIVE='false'           # use case-sensitive completion
 COMPLETION_WAITING_DOTS='true'  # ... when waiting for completion
 # HYPHEN_INSENSITIVE='true'     # case-sensitive off, _- interchangeable
 ENABLE_CORRECTION='true'        # enable command auto-correction
-setopt globdots    # tab-complete dot files
+# setopt globdots    # tab-complete dot files (annoying b/c ./ and ../)
 setopt noautomenu  # Bash-like tab completion
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"  # tab-complete colors
 

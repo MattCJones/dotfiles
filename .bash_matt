@@ -8,6 +8,7 @@ export WHOME="${WHOME:-/mnt/c/Users/$USER}"
 # Aliases
 ###############################
 #- Bash utilities
+alias me="echo `whoami`@`hostname` `hostname -I`"
 alias myip="ifconfig 2>/dev/null | grep 'inet .*\([0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9]\.[0-9]*\)' | xargs | cut -d ' ' -f2"
 alias ls="ls --color"
 alias ld="ls -d */"
@@ -93,6 +94,7 @@ alias vmore="vim -u ~/.vim/vimrc_more"
 alias vmo="vmore"
 alias viToHTML='vim -c TOhtml -c wqa'
 alias vgif='vimgif'
+alias magit="vim -c MagitOnly"
 #- Latexmk
 alias lmk="latexmk -pdf -pvc -lualatex"
 #- Git
