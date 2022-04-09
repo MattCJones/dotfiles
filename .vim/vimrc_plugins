@@ -45,7 +45,7 @@ Plug 'AndrewRadev/switch.vim'  " toggle True/False
 Plug 'tpope/vim-dispatch'  " compiling code from within Vim
 Plug 'Lokaltog/vim-easymotion'  " or look into sneak(seems better designed)
 Plug 'tpope/vim-eunuch'  " Unix commands in Vim s/a :Find, :Rename :Chmod etc.
-Plug 'bruno-/vim-husk'  " Emacs/Bash movement in cmdline (ctrl-f, ctrl-b, etc.)
+Plug 'bruno-/vim-husk'  " Emacs/Bash terminal movement (ctrl-f, ctrl-b, etc.)
 Plug 'tpope/vim-scriptease'  " g== and g=<movement> to eval text and much more
 Plug 'tpope/vim-unimpaired'  " [e [<Space> ., movement ([q [f [b ...) mappings (yos )
 

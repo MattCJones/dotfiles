@@ -107,8 +107,8 @@ fi
 ## ---- History ----
 setopt histignorealldups sharehistory  # ignore duplicates
 # Keep N lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=100  # how many commands are loaded from history file
+SAVEHIST=100  # how many commands are saved to history file
 HISTFILE=~/.zsh_history
 alias hist='history -i'  # show history datetime by default
 

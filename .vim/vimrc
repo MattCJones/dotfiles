@@ -55,7 +55,7 @@ set wildmode=longest,list " complete common match then show available
 set wildcharm=<C-z>       " used in macros to initiate <S-Tab> completion
 
 "- Movement
-set mouse=n               " enable use of mouse in normal mode
+set mouse=a               " enable use of mouse in normal mode
 set nostartofline         " stay in column when C-d, C-u, C-b, C-f
 
 "- Searching
@@ -75,6 +75,8 @@ set nowritebackup         " no backup before writing file
 set shell=/usr/bin/bash   " set the shell for :term
 set spelllang=en_us       " US dictionary for spell check
 set viminfo-=<50,s10      " save large yanks after close
+set shell=/usr/bin/zsh    " set default shell to zsh, (default is bash)
+set clipboard=            " do not auto copy to clipboard; use + register
 
 "- Tab with spaces
 set autoindent            " copy indent from current line to new line
@@ -195,7 +197,7 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-""- Set Ctrl-hjkl to move between windows
+"- Set Ctrl-hjkl to move between windows
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -350,11 +352,21 @@ command! Ctags !ctags -R .
 
 " Terminal Mode {{{1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- For help run :h :term
+"- For help run :h :term or :h terminal-typing
 if v:version >= 802
-  "- Remap <C-w><Esc> to change terminal insert to normal mode 
-  tnoremap <C-w><Esc> <C-w>N
-  tnoremap <C-w><C-w> <C-w>.
+  "- Remap terminal window key (default Ctrl-w), paste with Ctrl-<key> "<reg>
+  set termwinkey=<C-q>
+  "- Remap <Esc> to change terminal insert to normal mode 
+  tnoremap <Esc> <C-\><C-N>
+  "- Hit Ctrl-w twice to delete a word
+  "tnoremap <C-w><C-w> <C-w>.
+  "- Ctrl-Shift-k to delete to end of line
+  tnoremap <C-q><C-k> <C-k>
+  "- Set Ctrl-hjkl to move between windows while typing in terminal
+  tnoremap <C-h> <C-q>h
+  tnoremap <C-j> <C-q>j
+  tnoremap <C-k> <C-q>k
+  tnoremap <C-l> <C-q>l
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
