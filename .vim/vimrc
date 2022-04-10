@@ -152,8 +152,11 @@ nnoremap yoz :let &scrolloff=999-&scrolloff<CR>M
 
 "- Copy/Pasta
 "- For use of clipboard, make sure X11 server is enabled
+"- Pro-tip: use middle-mouse, i_ctrl-r ctrl-p +, or mappings below
 "- Copy highlighted text
 vnoremap <Leader>c "+y
+"- Copy line
+nnoremap <Leader>C "+yy
 "- Toggle paste
 nnoremap yop :set paste!<CR>:set paste?<CR>
 nnoremap <Leader>p :set paste!<CR>:set paste?<CR>
@@ -356,17 +359,22 @@ command! Ctags !ctags -R .
 if v:version >= 802
   "- Remap terminal window key (default Ctrl-w), paste with Ctrl-<key> "<reg>
   set termwinkey=<C-q>
-  "- Remap <Esc> to change terminal insert to normal mode 
-  tnoremap <Esc> <C-\><C-N>
-  "- Hit Ctrl-w twice to delete a word
-  "tnoremap <C-w><C-w> <C-w>.
+  "- Remap <C-q><Esc> to change terminal insert to normal mode 
+  tnoremap <C-q><Esc> <C-\><C-N>
   "- Ctrl-Shift-k to delete to end of line
   tnoremap <C-q><C-k> <C-k>
+  "- Paste a register (easier than Ctrl-q "<reg>)
+  tnoremap <C-q><C-r> <C-q>"
   "- Set Ctrl-hjkl to move between windows while typing in terminal
   tnoremap <C-h> <C-q>h
   tnoremap <C-j> <C-q>j
   tnoremap <C-k> <C-q>k
   tnoremap <C-l> <C-q>l
+  "- Old, less-preferred, but keeping for easy reference:
+  ""- Hit Ctrl-w twice to delete a word
+  "tnoremap <C-w><C-w> <C-w>.
+  ""- Remap <Esc> to change terminal insert to normal mode 
+  "tnoremap <Esc> <C-\><C-N>
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
