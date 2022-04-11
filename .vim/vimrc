@@ -47,6 +47,7 @@ set linebreak             " linewrap full words
 set number                " line numbers; use with relativenumber
 set relativenumber        " relative line numbers
 set splitright            " open vertical splits on right hand side
+set splitbelow            " open horizontal splits on bottom of pane
 set scrolloff=0           " lines of buffer from top/bottom of display
 
 "- Command prompt completion
@@ -166,6 +167,9 @@ nnoremap <Leader>V :set paste<CR>:put +<CR>:set nopaste<CR>
 nnoremap <Leader>v "+p
 "- Select pasted text; overrides useless select-mode bind
 nnoremap gV `[V`]
+"- Redirect output command to the + register (clipboard if enabled)
+nnoremap <Leader>r :redir @+ \| \| redir END
+  \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 "- Toggle spell checking
 nnoremap yos :set spell!<CR>:set spell?<CR>
@@ -205,6 +209,9 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+"- Buffers
+nnoremap <Leader>b :ls<CR>:b<space>
 
 "- Quickfix and file searching
 "- Open quickfix window
@@ -323,6 +330,7 @@ set statusline+=%-4(\ %c%)::%12(\ %l/%L\ %P%) " column and line information
 "- Buffers and windows
 "- Full screen help and vertical screen help
 command! -nargs=1 -complete=help H help <args> | resize 999
+" command! -nargs=1 -complete=help H help <args> | only
 command! -nargs=1 -complete=help Vh vertical help <args> | silent
 "- Aliases to open commonly-used files
 command! Vrc edit $MYVIMRC
@@ -350,32 +358,8 @@ command! Scratch new | only | setlocal buftype=nofile bufhidden=hide noswapfile
 
 "- Build tags using external ctags program; run from project's base directory
 command! Ctags !ctags -R .
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" }}}1
-
-" Terminal Mode {{{1
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"- For help run :h :term or :h terminal-typing
-if v:version >= 802
-  "- Remap terminal window key (default Ctrl-w), paste with Ctrl-<key> "<reg>
-  set termwinkey=<C-q>
-  "- Remap <C-q><Esc> to change terminal insert to normal mode 
-  tnoremap <C-q><Esc> <C-\><C-N>
-  "- Ctrl-Shift-k to delete to end of line
-  tnoremap <C-q><C-k> <C-k>
-  "- Paste a register (easier than Ctrl-q "<reg>)
-  tnoremap <C-q><C-r> <C-q>"
-  "- Set Ctrl-hjkl to move between windows while typing in terminal
-  tnoremap <C-h> <C-q>h
-  tnoremap <C-j> <C-q>j
-  tnoremap <C-k> <C-q>k
-  tnoremap <C-l> <C-q>l
-  "- Old, less-preferred, but keeping for easy reference:
-  ""- Hit Ctrl-w twice to delete a word
-  "tnoremap <C-w><C-w> <C-w>.
-  ""- Remap <Esc> to change terminal insert to normal mode 
-  "tnoremap <Esc> <C-\><C-N>
-endif
+"- Switch to a terminal buffer
+command! Bterm silent! execute "b!*sh"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
@@ -408,6 +392,42 @@ augroup bufferEvents
     \ | syntax spell toplevel
 augroup END
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}1
+
+" Terminal Mode {{{1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"- For help run :h :term or :h terminal-typing
+if v:version >= 802
+  "- Remap terminal window key (default Ctrl-w), paste with Ctrl-<key> "<reg>
+  set termwinkey=<C-q>
+  "- Remap <C-q><Esc> to change terminal insert to normal mode 
+  tnoremap <C-q><Esc> <C-\><C-N>
+  "- Ctrl-Shift-k to delete to end of line
+  tnoremap <C-q><C-k> <C-k>
+  "- Paste a register (easier than Ctrl-q "<reg>)
+  tnoremap <C-q><C-r> <C-q>"
+  "- Set Ctrl-hjkl to move between windows while typing in terminal
+  tnoremap <C-h> <C-q>h
+  tnoremap <C-j> <C-q>j
+  tnoremap <C-k> <C-q>k
+  tnoremap <C-l> <C-q>l
+  "- Old, less-preferred, but keeping for easy reference:
+  ""- Hit Ctrl-w twice to delete a word
+  "tnoremap <C-w><C-w> <C-w>.
+  ""- Remap <Esc> to change terminal insert to normal mode 
+  "tnoremap <Esc> <C-\><C-N>
+  "- Leader hotkey to open terminal in split window
+  nnoremap <Leader>t :term<CR>
+  "- Leader hotkey to open terminal in full window
+  nnoremap <Leader>T :term ++curwin<CR>
+  "- When changing buffers do not enter active terminal
+  augroup termIgnore
+    autocmd!
+    " autocmd TerminalOpen * set nobuflisted
+    autocmd TerminalOpen * if bufwinnr('') > 0 | setlocal nobuflisted | endif
+  augroup END
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 

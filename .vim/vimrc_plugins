@@ -75,6 +75,9 @@ Plug 'osyo-manga/unite-quickfix'  " write Unite results to quickfixlist
 Plug 'tsukkee/unite-tag'  " look through tags
 Plug 'Shougo/vimfiler.vim'  " replacement for NERD-tree
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " asynchronous
+"- Other fuzzy searchers (if not using Unite)
+"Plug 'rking/ag.vim'  " improved grep, :Ag [options] {pattern} [{directory}]; DEP: ag
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }  " improved ag; DEP: fzf
 
 "- Syntax checking
 Plug 'w0rp/ale'  " asynchronous syntax checking and linting, :ALEToggle
@@ -119,7 +122,7 @@ Plug 'tpope/vim-tbone'  " :Tmux to call any Tmux command with tab completion
 Plug 'edkolev/tmuxline.vim'  " airline bar in Tmux
 "- Send output to Tmux
 Plug 'jpalardy/vim-slime'  " send output to Tmux
-"- Vimux <leader>vp <leader>vl
+"- Vimux 2022-04-10: disabled commands <Leader>vp <Leader>vl
 Plug 'benmills/vimux'  " interact with Tmux
 Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
 "Plug 'jgors/vimux-ipy'   " adapted from vimux-pyutils, overwrites ctrl-b PROBLEM 2020-09-17
@@ -140,7 +143,6 @@ Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
 "- Rarely used
 
 "- Don't like
-"Plug 'rking/ag.vim'  " improved grep, :Ag [options] {pattern} [{directory}]; DEP: ag
 "Plug 'kien/ctrlp.vim'  " fuzzy file name finder; (replaced by unite)
 " Plug 'gregsexton/gitv'  " repo viewer; :Gitv(browser) :Gitv!(file); NOT MAINTAINED
 "Plug 'terryma/vim-multiple-cursors'  " multiple cursors, unnecessary but fun
@@ -151,7 +153,7 @@ Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
 "Plug 'vimwiki'  " create notes/wiki pages
 "Plug 'itchyny/lightline.vim'  " replacement for vim-airline?
 "Plug 'tpope/vim-rsi'  " command line keys in insert and command mode; prefer vim-eunuch
-"Plug 'nelstrom/vim-visual-star-search'  " * and # search highlighted text, <leader>* for grep; BUG: overwrites 0 register when visual searching decimal number
+"Plug 'nelstrom/vim-visual-star-search'  " * and # search highlighted text, <Leader>* for grep; BUG: overwrites 0 register when visual searching decimal number
 "Plug 'godlygeek/tabular'  " :Tabularize / searchTerm; (replaced by vim-easy-align)
 "Plug 'severin-lemaignan/vim-minimap'  " build minimap of code; interesting but unhelpful
 "Plug 'moll/vim-bbye'  " delete a buffer but keep split intact; otherwise: :b#|bd#
@@ -194,13 +196,26 @@ endif
 
 "- Vim-Airline and Tmuxline
 if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
-  "- Airline
-  let g:airline_section_warning = ''  " hide warnings in Vim statusline
-  let g:airline_symbols_ascii = 1  " turn off unicode if not supported
-  let g:airline#extensions#tabline#enabled = 1  " display buffers at top
-  let g:airline#extensions#tabline#buffer_nr_show = 1  " show buffer numbers
-  let g:airline#extensions#tabline#show_splits = 0
+  "- Vim-Airline
+  "- Tabline
+  let g:airline#extensions#tabline#enabled = 1           " display buffers at top
+  let g:airline#extensions#tabline#show_tabs = 0         " enable/disable tab info
+  let g:airline#extensions#tabline#show_splits = 1       " tab buffers on right
+  let g:airline#extensions#tabline#show_tab_count = 1    " tab numbers on right, i/N
+  let g:airline#extensions#tabline#tab_nr_type = 1       " `1` for tab number
+  let g:airline#extensions#tabline#show_tab_nr = 1       " tab numbers on left
+  let g:airline#extensions#tabline#buffer_nr_show = 1    " show buffer numbers
+  let g:airline#extensions#tabline#buffer_min_count = 2  " no buffers when only 1
+  let g:airline#extensions#tabline#fnamemod = ':t'       " ':t' disable filepaths
+  let g:airline#extensions#tabline#show_close_button = 0 " remove 'X' on RHS
+  " let g:airline_symbols_ascii = 1                        " no unicode (if old terminal)
+  "- Ignore extraneous buffers caused by other plugins
+  let g:airline#extensions#tabline#ignore_bufadd_pat =
+    \ '!|defx|gundo|nerd_tree|startify|tagbar|term://|undotree|vimfiler|unite|airline'
+  "- Ignore filenames
+  let g:airline#extensions#tabline#excludes = []
   "- Sections: | A | B |          C             X | Y | Z |  [additional...] |
+  let g:airline_section_warning = ''                     " hide warnings in statusline
   let g:airline_section_y = ''  " don't display file encoding
   let g:airline_section_z = '%-4( %c%)::%12( %l/%L %P%)'
 
@@ -235,7 +250,7 @@ endif
 
 "- Deoplete {{{2
 " -----------------------------------------------------------------------------
-if exists('g:plugs["deoplete.nvm"]')  " find plugin name in g:plugs_order
+if exists('g:plugs["deoplete.nvim"]')  " find plugin name in g:plugs_order
   let g:deoplete#enable_at_startup = 1
   call deoplete#custom#option({
   \ 'auto_complete_delay': 20,
@@ -258,7 +273,7 @@ endif
 "- EasyAlign {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-easy-align"]')  " find plugin name in g:plugs_order
-  "- Two options: ga as align and <leader>ga as ga org.  gA as align
+  "- Two options: ga as align and <Leader>ga as ga org.  gA as align
   "- Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
   vmap gA <Plug>(EasyAlign)
   "- Start interactive EasyAlign for a motion/text object (e.g. gaip)
@@ -275,7 +290,7 @@ endif
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vim-easymotion"]')  " find plugin name in g:plugs_order
   let g:EasyMotion_do_mapping = 0  " Disable default mappings
-  map <leader><leader> <Plug>(easymotion-s)
+  map <Leader><Leader> <Plug>(easymotion-s)
   map <Space><Space> <Plug>(easymotion-s)
   highlight EasyMotionTarget2First ctermbg=none ctermfg=darkcyan
   highlight EasyMotionTarget2Second ctermbg=none ctermfg=blue
@@ -318,7 +333,7 @@ endif
 "- Undotree {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["undotree"]')  " find plugin name in g:plugs_order
-  nnoremap <leader>gu :UndotreeToggle<CR>
+  nnoremap <Leader>gu :UndotreeToggle<CR>
 endif
 " -----------------------------------------------------------------------------
 " }}}2
@@ -399,7 +414,9 @@ endif
 "- Tagbar {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["tagbar"]')  " find plugin name in g:plugs_order
-  nmap <leader>t :Tagbar<CR>
+  "- 2022-04-10: <Leader>t CONFLICT with open terminal mapping
+  " nmap <Leader>t :Tagbar<CR>
+  " let g:tagbar_position = 'topleft vertical'  " default 'botright vertical'
 endif
 " -----------------------------------------------------------------------------
 " }}}2
@@ -426,26 +443,26 @@ if exists('g:plugs["unite.vim"]')  " find plugin name in g:plugs_order
   call unite#filters#matcher_default#use(['matcher_fuzzy'])
   let g:unite_source_history_yank_enable = 1
   let g:unite_source_history_yank_limit = 28
-  nnoremap <leader>u :<C-u>Unite source<CR>
-  nnoremap <leader>us :<C-u>Unite source<CR>
+  nnoremap <Leader>u :<C-u>Unite source<CR>
+  nnoremap <Leader>us :<C-u>Unite source<CR>
   if exists('g:plugs["vimproc.vim"]')  " find plugin name in g:plugs_order
-    nnoremap <leader>ue :<C-u>Unite -no-split -buffer-name=files file/async:!<CR>
-    nnoremap <leader>uf :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async:!<CR>
+    nnoremap <Leader>ue :<C-u>Unite -no-split -buffer-name=files file/async:!<CR>
+    nnoremap <Leader>uf :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async:!<CR>
   else
-    nnoremap <leader>ue :<C-u>Unite -no-split -buffer-name=files file<CR>
-    nnoremap <leader>uf :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec<CR>
+    nnoremap <Leader>ue :<C-u>Unite -no-split -buffer-name=files file<CR>
+    nnoremap <Leader>uf :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec<CR>
   endif
-  nnoremap <leader>um :<C-u>Unite -no-split -buffer-name=mru  -start-insert file_mru<CR>
+  nnoremap <Leader>um :<C-u>Unite -no-split -buffer-name=mru  -start-insert file_mru<CR>
   "- Sample colorschemes appearances; press 'p' for preview
-  nnoremap <silent> <leader>ua :<C-u>silent! call UniteColorschemeSelect()<CR>
-  nnoremap <leader>ua :<C-u>Unite -buffer-name=colorscheme -vertical -winwidth=30 colorscheme<CR>
-  nnoremap <leader>ub :<C-u>Unite -buffer-name=buffer buffer<CR>
-  nnoremap <leader>uc :<C-u>Unite output<CR>
-  nnoremap <leader>uh :<C-u>Unite help<CR>
-  nnoremap <leader>ut :<C-u>Unite tag<CR>
-  nnoremap <leader>uy :<C-u>Unite -buffer-name=yank history/yank<CR>
-  nnoremap <leader>uq :Unite -no-split -buffer-name=quickfix -auto-preview -no-empty quickfix<CR>
-  nnoremap <leader>u/ :Unite grep:.<CR>
+  nnoremap <silent> <Leader>ua :<C-u>silent! call UniteColorschemeSelect()<CR>
+  nnoremap <Leader>ua :<C-u>Unite -buffer-name=colorscheme -vertical -winwidth=30 colorscheme<CR>
+  nnoremap <Leader>ub :<C-u>Unite -buffer-name=buffer buffer<CR>
+  nnoremap <Leader>uc :<C-u>Unite output<CR>
+  nnoremap <Leader>uh :<C-u>Unite help<CR>
+  nnoremap <Leader>ut :<C-u>Unite tag<CR>
+  nnoremap <Leader>uy :<C-u>Unite -buffer-name=yank history/yank<CR>
+  nnoremap <Leader>uq :Unite -no-split -buffer-name=quickfix -auto-preview -no-empty quickfix<CR>
+  nnoremap <Leader>u/ :Unite grep:.<CR>
 
   "- Custom mappings for the unite buffer
   function! s:unite_settings()
@@ -461,16 +478,17 @@ endif
 "- Vimfiler {{{2
 " -----------------------------------------------------------------------------
 if exists('g:plugs["vimfiler.vim"]')  " find plugin name in g:plugs_order
-  nmap <leader>E :VimFilerExplorer<CR>
   let g:vimfiler_ignore_pattern = '^\%(\.git\|\.DS_Store\)$'
+  let g:vimfiler_as_default_explorer = 1
+  nmap <Leader>E :VimFilerExplorer<CR>
 endif
 " -----------------------------------------------------------------------------
 " }}}2
 
 "- Vimux {{{2
 " -----------------------------------------------------------------------------
- map <Leader>vp :VimuxPromptCommand<CR>
- map <Leader>vl :VimuxRunLastCommand<CR>
+ " map <Leader>vp :VimuxPromptCommand<CR>
+ " map <Leader>vl :VimuxRunLastCommand<CR>
 " -----------------------------------------------------------------------------
 " }}}2
 
