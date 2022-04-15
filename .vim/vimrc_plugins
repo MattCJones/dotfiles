@@ -211,7 +211,7 @@ if exists('g:plugs["vim-airline"]')  " find plugin name in g:plugs_order
   " let g:airline_symbols_ascii = 1                        " no unicode (if old terminal)
   "- Ignore extraneous buffers caused by other plugins
   let g:airline#extensions#tabline#ignore_bufadd_pat =
-    \ '!|defx|gundo|nerd_tree|startify|tagbar|term://|undotree|vimfiler|unite|airline'
+    \ '!|defx|gundo|nerd_tree|startify|tagbar|term://|undotree|vimfiler|unite|airline|windows.txt'
   "- Ignore filenames
   let g:airline#extensions#tabline#excludes = []
   "- Sections: | A | B |          C             X | Y | Z |  [additional...] |
@@ -256,6 +256,15 @@ if exists('g:plugs["deoplete.nvim"]')  " find plugin name in g:plugs_order
   \ 'auto_complete_delay': 20,
   \ 'smart_case': v:true,
   \ })
+  "- Set C-n and Tab to manuallly complete
+  inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<Tab>" :
+  \ deoplete#manual_complete()
+  function! s:check_back_space() abort "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction"}}}
 endif
 " -----------------------------------------------------------------------------
 " }}}2
@@ -429,6 +438,8 @@ if exists('g:plugs["ultisnips"]')  " find plugin name in g:plugs_order
   let g:UltiSnipsExpandTrigger="<C-j>"
   "- Ultisnips not recognizing .tex files
   let g:tex_flavor = "latex"
+  "- Choose Python docstrings style: doxygen, sphinx, google, numpy, jedi
+	let g:ultisnips_python_style = "google"
 endif
 " -----------------------------------------------------------------------------
 " }}}2
@@ -480,7 +491,7 @@ endif
 if exists('g:plugs["vimfiler.vim"]')  " find plugin name in g:plugs_order
   let g:vimfiler_ignore_pattern = '^\%(\.git\|\.DS_Store\)$'
   let g:vimfiler_as_default_explorer = 1
-  nmap <Leader>E :VimFilerExplorer<CR>
+  nmap <Leader>e :VimFilerExplorer<CR>
 endif
 " -----------------------------------------------------------------------------
 " }}}2

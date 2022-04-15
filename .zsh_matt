@@ -48,7 +48,7 @@ timecolor="%B%F{black}"
 usercolor="%b%F{magenta}"
 pwdcolor="%b%F{blue}"  # %B%F{blue} for actual dir color
 arrowcolor="%b%F{black}"
-othercolor="%b%F{cyan}"
+othercolor="%B%F{magenta}"
 
 # Git branch info
 if (isplugin 'git-prompt'); then
@@ -71,7 +71,7 @@ function userhost_info() {
 
 function prompt_matt_short() {
   precmd(){}  # printed before prompt
-  PROMPT="$pwdcolor%(5~|%-1~/…/%2~|%4~) $arrowcolor❯ "  # ⇒➤»❯
+  PROMPT="$pwdcolor%(5~|%-1~/…/%2~|%4~) $arrowcolor❯ "  # ⇒➤»❯>
   # Use git-prompt for git info if it is installed
   if (isplugin 'git-prompt'); then
     PROMPT="$git_branch $PROMPT"

@@ -82,9 +82,10 @@ alias vinop="vim --noplugins"
 alias vir="vim -RmM"  # readonly mode
 alias vrc="vim ~/.vim/vimrc"
 alias vrcp="vim ~/.vim/vimrc_plugins"
+alias vrcl="vim ~/.vim/vimrc_local"
+alias vrca="vrc vrcp vrcl"  # all config files
 alias vrcm="vim ~/.vim/vimrc_more"
 alias vrco="vim ~/.vim/vimrc_openfoam"
-alias vrcl="vim ~/.vim/vimrc_local"
 alias vimProfile="vim --cmd 'profile start vimrc_profile' --cmd 'profile! file ~/.vim/vimrc'"
 alias vimStartupTime="vim --startuptime /tmp/startup.log +q && vim /tmp/startup.log"
 alias vis="vim -u NONE -N -s"
@@ -135,6 +136,7 @@ alias szma="source ~/.zsh_matt"
 alias sfrc="source ~/.config/figh/config.fish"
 alias sfoam="source $WM_PROJECT_DIR/bin/tools/RunFunctions; source $WM_PROJECT_DIR/bin/tools/CleanFunctions"
 alias todo="vim ~/TODO.md"
+alias z="zsh"
 
 # Constants and movement
 export DOCUMENTS="$WHOME/Documents"; alias documents="cd $DOCUMENTS"

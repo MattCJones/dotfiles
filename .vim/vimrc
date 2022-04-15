@@ -47,7 +47,7 @@ set linebreak             " linewrap full words
 set number                " line numbers; use with relativenumber
 set relativenumber        " relative line numbers
 set splitright            " open vertical splits on right hand side
-set splitbelow            " open horizontal splits on bottom of pane
+set nosplitbelow          " horizontal splits on top of pane
 set scrolloff=0           " lines of buffer from top/bottom of display
 
 "- Command prompt completion
@@ -58,6 +58,7 @@ set wildcharm=<C-z>       " used in macros to initiate <S-Tab> completion
 "- Movement
 set mouse=a               " enable use of mouse in normal mode
 set nostartofline         " stay in column when C-d, C-u, C-b, C-f
+set ttymouse=sgr          " 'sgr' newest/best encoding
 
 "- Searching
 set ignorecase            " use with smartcase
@@ -67,17 +68,16 @@ set tagcase=match         " match case for tags
 
 "- System
 set belloff=all           " no bell chimes while editing
+set clipboard=            " do not auto copy to clipboard; use + register
 set encoding=utf-8        " only use UTF-8 characters
 set hidden                " change buffers without saving
 set nobackup              " no backup files
 set noesckeys             " fix startup replace mode bug when using WSL
 set noswapfile            " no swap files
 set nowritebackup         " no backup before writing file
-set shell=/usr/bin/bash   " set the shell for :term
+set shell=/usr/bin/zsh    " set default shell to zsh, (default is bash)
 set spelllang=en_us       " US dictionary for spell check
 set viminfo-=<50,s10      " save large yanks after close
-set shell=/usr/bin/zsh    " set default shell to zsh, (default is bash)
-set clipboard=            " do not auto copy to clipboard; use + register
 
 "- Tab with spaces
 set autoindent            " copy indent from current line to new line
@@ -101,8 +101,8 @@ map <Space> <Leader>
 "- Buffer movement
 nnoremap <C-n> :bn<CR>
 nnoremap <C-p> :bp<CR>
-nnoremap <Leader>d :bd<CR>
-nnoremap <Leader>D :Bd<CR>
+nnoremap <Leader>d :Bd<CR>
+nnoremap <Leader>D :bd<CR>
 
 "- Rebind arrow keys to resize splits
 nnoremap <Left> 1<C-w><
@@ -134,7 +134,7 @@ nnoremap <Leader>m :<C-u><C-r>= 'let @'. v:register .'
 cmap w!! :w !sudo tee > /dev/null %<CR>
 
 "- File explore
-nnoremap <Leader>e :Explore<CR>
+nnoremap <Leader>E :Explore<CR>
 "- Tab-explore all files with <S-Tab>
 nnoremap <Leader>ge :e **/*<C-z><S-Tab>
 
@@ -336,6 +336,7 @@ command! -nargs=1 -complete=help Vh vertical help <args> | silent
 command! Vrc edit $MYVIMRC
 command! Vrcp edit ~/.vim/vimrc_plugins
 command! Vrcl edit ~/.vim/vimrc_local
+command! Vrca edit $MYVIMRC ~/.vim/vimrc_plugins ~/.vim/vimrc_local
 command! SVrc source $MYVIMRC
 command! Inst source $MYVIMRC | :PlugInstall
 command! Tco edit ~/.tmux.conf
@@ -418,13 +419,12 @@ if v:version >= 802
   ""- Remap <Esc> to change terminal insert to normal mode 
   "tnoremap <Esc> <C-\><C-N>
   "- Leader hotkey to open terminal in split window
-  nnoremap <Leader>t :term<CR>
+  nnoremap <Leader>t :belowright term<CR>
   "- Leader hotkey to open terminal in full window
   nnoremap <Leader>T :term ++curwin<CR>
   "- When changing buffers do not enter active terminal
   augroup termIgnore
     autocmd!
-    " autocmd TerminalOpen * set nobuflisted
     autocmd TerminalOpen * if bufwinnr('') > 0 | setlocal nobuflisted | endif
   augroup END
 endif
