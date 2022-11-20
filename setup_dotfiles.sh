@@ -27,4 +27,6 @@ linkfiles "${ipyfiles[@]}" "$HOME/.ipython/profile_matt" "ipy"
 
 # Copy Windows Terminal settings
 wintermdir=/mnt/c/Users/weehi/AppData/Local/Packages/Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe/LocalState/
+wintermdir=/mnt/c/Users/mcjones/AppData/Local/Packages/Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe/LocalState/
 cp Windows/WindowsTerminal/settings.json $wintermdir/
+echo cp Windows/WindowsTerminal/settings.json $wintermdir/

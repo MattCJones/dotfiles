@@ -8,8 +8,8 @@ antigen use oh-my-zsh  # use Oh-My-Zsh plugins when applicable
 # See ~/.antigen/bundles/
 antigen_plugins=(
   command-not-found                  # suggests packages on fail
-  # git                               # many git aliases
-  git-prompt                         # git info in prompt w/ $git_super_status
+  # git                                # many git aliases
+  # git-prompt                         # git info in prompt w/ $git_super_status
   pip                                # pip completion
   supercrabtree/k                    # `k` improved ls -l
   z                                  # `z` jump to frequently used files
@@ -56,7 +56,8 @@ if (isplugin 'git-prompt'); then
   ZSH_THEME_GIT_PROMPT_PREFIX="‹"
   ZSH_THEME_GIT_PROMPT_SUFFIX="›%f"
 else  # if no git-prompt plugin
-  git_branch='$(git_prompt_info)'
+  # git_branch='$(git_prompt_info)'
+  git_branch=''
 fi
 
 # User and hostname - change color if using SSH
@@ -94,8 +95,8 @@ $arrowcolor╰─➤ %f "
 }
 
 # Set prompt
-# prompt_matt_short
-prompt_matt_long
+prompt_matt_short
+# prompt_matt_long
 
 ### User Configuration
 # ============================================================
@@ -157,6 +158,7 @@ fi
 ## Copy and uncomment the following to the bottom of ~/.zshrc
 # autoload -Uz bashcompinit && bashcompinit
 # export WHOME="/path/to/windows/home"
+# source ~/.bash_local
 # source ~/.bash_matt_private
 # source ~/.bash_matt
 # source ~/.zsh_matt

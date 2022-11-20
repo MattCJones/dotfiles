@@ -51,7 +51,7 @@ set nosplitbelow          " horizontal splits on top of pane
 set scrolloff=0           " lines of buffer from top/bottom of display
 
 "- Command prompt completion
-set wildignore=*.o,*~,*.pyc,__pycache__,*.dep,*.png,*.jpg,*.gif,*.swp
+set wildignore=*.o,*~,*.pyc,__pycache__,*.dep,*.swp
 set wildmode=longest,list " complete common match then show available
 set wildcharm=<C-z>       " used in macros to initiate <S-Tab> completion
 
@@ -232,6 +232,11 @@ nnoremap <Leader>g* :<C-u>cexpr []<CR>:<C-u>noautocmd bufdo
     \ vimgrepadd /\<<C-r><C-w>\>/j %<CR>
 vnoremap <Leader>g* :<C-u>cexpr []<CR>:<C-u>noautocmd bufdo
     \ vimgrepadd /\<<C-r><C-w>\>/j %<CR>
+
+"- Visual mode
+"- Keep selected when indenting in visual mode
+vnoremap > >gv
+vnoremap < <gv
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
@@ -361,6 +366,10 @@ command! Scratch new | only | setlocal buftype=nofile bufhidden=hide noswapfile
 command! Ctags !ctags -R .
 "- Switch to a terminal buffer
 command! Bterm silent! execute "b!*sh"
+"- Open terminal in full window
+command! Term execute "term ++curwin"
+"- Open terminal in vertically split window
+command! Vterm execute "vert term"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " }}}1
 
@@ -421,7 +430,7 @@ if v:version >= 802
   "- Leader hotkey to open terminal in split window
   nnoremap <Leader>t :belowright term<CR>
   "- Leader hotkey to open terminal in full window
-  nnoremap <Leader>T :term ++curwin<CR>
+  nnoremap <Leader>T :Vterm<CR>
   "- When changing buffers do not enter active terminal
   augroup termIgnore
     autocmd!

@@ -55,6 +55,12 @@ Plug 'airblade/vim-gitgutter'  " vis hunks in file, ]c [c to jump @slow
 " Plug 'mhinz/vim-signify'  " like gitgutter (+responsive, -pretty) @slow
 Plug 'jreybert/vimagit'  " visualize git changes, selective commit,:Magit
 Plug 'sodapopcan/vim-twiggy'  " manage branches
+"- Gin addon (2022-04-19: in alpha) DEP: vim-denops.vim
+" Plug 'vim-denops/denops.vim'  " DEP: Deno (shared language nvim and vim)
+" Plug 'lambdalisue/gin.vim'
+"- Don't like
+" Plug 'gregsexton/gitv'  " repo viewer; :Gitv(browser) :Gitv!(file); NOT MAINTAINED
+" Plug 'junegunn/gv.vim'  " like gitv but faster
 
 "- Inspection and navigation
 Plug 'tpope/vim-characterize'  " enhances ga
@@ -91,10 +97,10 @@ Plug 'MattCJones/vim-foam-programmer'
 Plug 'sirver/ultisnips' | Plug 'honza/vim-snippets'  " customizable snippets
 "- Youcompleteme - unified tab completion; requires external build @slow
 "Plug 'valloric/youcompleteme' | Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}  " DEP: Clang
-""- Consider mucomplete (lightweight compared to Youcompleteme)
+"- Consider mucomplete (lightweight compared to Youcompleteme)
 "Plug 'lifepillar/vim-mucomplete'  " minimal completion engine
 "Plug 'davidhalter/jedi-vim'  " use with vim-mucomplete
-"- Consider deoplete
+""- Consider deoplete
 Plug 'Shougo/deoplete.nvim'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
@@ -139,12 +145,12 @@ Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
 " Plug 'thinca/vim-quickrun' - run commands on file quickly, :QuickRun -python
 " Plug 'skywind3000/vim-quickui'
 "- Gnupg.vim - plugin allows easy work with encrypted text files
+" Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }  " PROBLEM 2022-07-01
 
 "- Rarely used
 
 "- Don't like
 "Plug 'kien/ctrlp.vim'  " fuzzy file name finder; (replaced by unite)
-" Plug 'gregsexton/gitv'  " repo viewer; :Gitv(browser) :Gitv!(file); NOT MAINTAINED
 "Plug 'terryma/vim-multiple-cursors'  " multiple cursors, unnecessary but fun
 "Plug 'scrooloose/nerdtree'  " file explorer, buggy, don't like, breaks defaults
 "Plug 'justinmk/vim-sneak'  " breaks default capabilities
@@ -158,7 +164,7 @@ Plug 'julienr/vimux-pyutils'  " works, ctrl-c on selection
 "Plug 'severin-lemaignan/vim-minimap'  " build minimap of code; interesting but unhelpful
 "Plug 'moll/vim-bbye'  " delete a buffer but keep split intact; otherwise: :b#|bd#
 "Plug 'vim-scripts/BufOnly.vim'  " delete all buffers but current, :BufOnly
-"Plug 'scrooloose/syntastic'  " non-asynchronous syntax checking; prefer Ale @slow
+"Plug 'scrooloose/syntastic'  " non-asynchronous syntax checking; DEPRECATED; prefer Ale @slow
 "Plug 'sjl/gundo.vim'  " visualize undo tree; requires Python 2.4+
 
 " -----------------------------------------------------------------------------

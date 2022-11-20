@@ -20,8 +20,9 @@ c.InteractiveShellApp.exec_files = ["/home/mcjones/.ipython/profile_matt/ipython
 ## lines of code to run at IPython startup.
 #  Default: []
 c.InteractiveShellApp.exec_lines = [
-        "from flightcondition import Atmosphere as Atm, FlightCondition as FC, unit, dimless",
-        ]
+    "from pathlib import Path",
+    "from flightcondition import Atmosphere, FlightCondition, unit, dimless, printv",
+]
 
 ## Pre-load matplotlib and numpy for interactive use,
 #          selecting a particular matplotlib backend and loop integration.
